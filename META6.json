@@ -10,9 +10,16 @@
     "perl" : "6.c",
     "provides" : {
         "OpenAPI::Model" : "lib/OpenAPI/Model.pm6",
+        "OpenAPI::Model::Component" : "lib/OpenAPI/Model/Component.pm6",
         "OpenAPI::Model::Element" : "lib/OpenAPI/Model/Element.pm6",
+        "OpenAPI::Model::ExternalDocs" : "lib/OpenAPI/Model/ExternalDocs.pm6",
+        "OpenAPI::Model::Info" : "lib/OpenAPI/Model/Info.pm6",
         "OpenAPI::Model::OpenAPI" : "lib/OpenAPI/Model/OpenAPI.pm6",
-        "OpenAPI::Model::Operation" : "lib/OpenAPI/Model/Operation.pm6"
+        "OpenAPI::Model::Operation" : "lib/OpenAPI/Model/Operation.pm6",
+        "OpenAPI::Model::Path" : "lib/OpenAPI/Model/Path.pm6",
+        "OpenAPI::Model::Security" : "lib/OpenAPI/Model/Security.pm6",
+        "OpenAPI::Model::Server" : "lib/OpenAPI/Model/Server.pm6",
+        "OpenAPI::Model::Tag" : "lib/OpenAPI/Model/Tag.pm6"
     },
     "resources" : [ ],
     "source-url" : "",
