@@ -1,0 +1,19 @@
+{
+    "authors" : [
+        "Alexander Kiryuhin <alexander.kiryuhin@gmail.com>"
+    ],
+    "build-depends" : [ ],
+    "depends" : [ ],
+    "description" : "Work with OpenAPI documents in terms of a set of Perl 6 objects.",
+    "license" : "Artistic-2.0",
+    "name" : "OpenAPI::Model",
+    "perl" : "6.c",
+    "provides" : {
+        "OpenAPI::Model" : "lib/OpenAPI/Model.pm6"
+    },
+    "resources" : [ ],
+    "source-url" : "",
+    "tags" : [ ],
+    "test-depends" : [ ],
+    "version" : "0.0.1"
+}
