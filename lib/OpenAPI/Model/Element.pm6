@@ -1,3 +1,5 @@
+use OpenAPI::Model;
+
 role OpenAPI::Model::Element [:%scalar, :%object] {
     has OpenAPI::Model $.model;
 

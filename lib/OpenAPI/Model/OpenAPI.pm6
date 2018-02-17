@@ -1,14 +1,25 @@
 use v6.c;
 
-class OpenAPI::Model::OpenAPI {
-    has Str $.openapi is required is rw is default(Nil);
-    has Info $.info is required is default(Nil);
-    has Server @.servers is default(Nil);
-    has Path @.paths is required is default(Nil);
-    has Component $.components is default(Nil);
-    has Security @.security is default(Nil);
-    has Tag @.tags is default(Nil);
-    has ExternalDocs $.external-docs is default(Nil);
+use OpenAPI::Model::Element;
+use OpenAPI::Model::Info;
+use OpenAPI::Model::Server;
+use OpenAPI::Model::Path;
+use OpenAPI::Model::Component;
+use OpenAPI::Model::Security;
+use OpenAPI::Model::Tag;
+use OpenAPI::Model::ExternalDocs;
+
+class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
+    scalar => {},
+    object => {}] {
+    has Str $.openapi is required is rw;
+    has OpenAPI::Model::Info $.info is required;
+    has OpenAPI::Model::Server @.servers;
+    has OpenAPI::Model::Path @.paths is required;
+    has OpenAPI::Model::Component $.components;
+    has OpenAPI::Model::Security @.security;
+    has OpenAPI::Model::Tag @.tags;
+    has OpenAPI::Model::ExternalDocs $.external-docs;
 
     multi method set-openapi(Any:U) {
         $!openapi = Nil;
@@ -18,14 +29,14 @@ class OpenAPI::Model::OpenAPI {
     multi method set-info(Any:U) {
         $!info = Nil;
     }
-    multi method set-info(Info $!info --> Nil) {
+    multi method set-info(OpenAPI::Model::Info:D $!info --> Nil) {
         $!info.set-model($!model);
     }
 
     multi method set-external-docs(Any:U) {
         $!external-docs = Nil;
     }
-    multi method set-external-docs(ExternalDocs:D $!externalDocs --> Nil) {
-        $!externalDocs.set-model($!model);
+    multi method set-external-docs(OpenAPI::Model::ExternalDocs:D $!external-docs --> Nil) {
+        $!external-docs.set-model($!model);
     }
 }

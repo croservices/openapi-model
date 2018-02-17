@@ -1,0 +1,1 @@
+class OpenAPI::Model::Info {}
