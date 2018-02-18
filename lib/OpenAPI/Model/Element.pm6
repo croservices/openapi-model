@@ -1,4 +1,3 @@
-use OpenAPI::Model;
 use JSON::Fast;
 
 class X::OpenAPI::Model::TypeMismatch is Exception {
@@ -13,7 +12,7 @@ class X::OpenAPI::Model::TypeMismatch is Exception {
 }
 
 role OpenAPI::Model::Element [:%scalar, :%object] {
-    has OpenAPI::Model $.model;
+    has $.model;
     has %.extensions;
     my %attr-lookup = ::?CLASS.^attributes(:local).map({ .name.substr(2) => $_ });
 
