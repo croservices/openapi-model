@@ -1,4 +1,5 @@
 use OpenAPI::Model;
+use JSON::Fast;
 
 class X::OpenAPI::Model::TypeMismatch is Exception {
     has $.name;
@@ -18,8 +19,23 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
 
     method set-model($!model) {}
 
-    method deserialize($source) {}
-    method serialize() {}
+    method deserialize($source) {
+        my %attrs;
+        for $source.kv -> $k, $v {
+            %attrs{$k} = $k (elem) %scalar.keys ?? $v !! %object{$k}<type>.new(|$v);
+        }
+        self.new(|%attrs);
+    }
+    method serialize() {
+        my %structure;
+        for %scalar.kv -> $k, $v {
+            %structure{$k} = %attr-lookup{%scalar{$k}<attr>}.get_value(self);
+        }
+        for %object.kv -> $k, $v {
+            %structure{$k} = %attr-lookup{%object{$k}<attr>}.get_value(self).serialize;
+        }
+        %structure;
+    }
 
     submethod BUILD(*%args where {(%scalar.keys (|) %object.keys) (-) .keys === set()}) {
         for %args.kv -> $k, $v {
