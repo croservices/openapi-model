@@ -3,7 +3,10 @@
         "Alexander Kiryuhin <alexander.kiryuhin@gmail.com>"
     ],
     "build-depends" : [ ],
-    "depends" : [ ],
+    "depends" : [
+        "JSON::Fast",
+        "YAMLish"
+    ],
     "description" : "Work with OpenAPI documents in terms of a set of Perl 6 objects.",
     "license" : "Artistic-2.0",
     "name" : "OpenAPI::Model",
