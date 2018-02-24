@@ -76,4 +76,7 @@ is $api.servers[1].description, 'Staging server', 'Second server description is 
 is $api.servers[2].variables<username>.default, 'demo', 'username variable of third server is correct';
 is $api.servers[2].variables<port>.enum[1], 443, 'port variable of third server is correct';
 
+lives-ok { $api.servers[0].set-variable("song", OpenAPI::Model::Variable.new(default => "Parting", description => "Variable of song")) }, 'Can add variable for server';
+is $api.servers[0].variables.elems, 1, 'Variable was added';
+
 done-testing;
