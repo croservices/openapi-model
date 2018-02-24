@@ -32,14 +32,27 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
         components => {
             attr => 'components',
             type => OpenAPI::Model::Components
+        },
+        security => {
+            attr => 'security',
+            type => OpenAPI::Model::Security,
+            array => True
+        },
+        tags => {
+            attr => 'tags',
+            type => OpenAPI::Model::Tag,
+            array => True
+        },
+        externalDocs => {
+            attr => 'external-docs',
+            type => OpenAPI::Model::ExternalDocs
         }
-        
     }] {
     has Str $.openapi is required is rw;
     has OpenAPI::Model::Info $.info is required;
     has OpenAPI::Model::Server @!servers;
-    has OpenAPI::Model::Path @.paths is required;
-    has OpenAPI::Model::Component $!components;
+    has OpenAPI::Model::Paths @.paths is required;
+    has OpenAPI::Model::Components $!components;
     has OpenAPI::Model::Security @!security;
     has OpenAPI::Model::Tag @!tags;
     has OpenAPI::Model::ExternalDocs $!external-docs;
@@ -62,11 +75,11 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     multi method add-server(OpenAPI::Model::Server $server) { @!servers.push: $server }
     multi method remove-server(--> Nil) {}
 
-    multi method add-path(OpenAPI::Model::Path $path) { @!paths.push: $path }
+    multi method add-path(OpenAPI::Model::Paths $path) { @!paths.push: $path }
     multi method remove-path(--> Nil) {}
 
     multi method set-components(Any:U) { $!components = Nil }
-    multi method set-components(OpenAPI::Model::Component:D $!components --> Nil) {
+    multi method set-components(OpenAPI::Model::Components:D $!components --> Nil) {
         $!components.set-model($!model);
     }
 

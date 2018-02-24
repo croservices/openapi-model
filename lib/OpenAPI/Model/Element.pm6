@@ -40,8 +40,11 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
         %structure;
     }
 
-    submethod BUILD(*%args where {(set ((%scalar.keys (|) %object.keys) (-) .keys)
-                                   .grep({ not .key.starts-with('x-') })) === set()}) {
+    submethod BUILD(*%args where {
+                           my $keys = .keys (-) (%scalar.keys (|) %object.keys);
+                           $keys .= grep({ not .key.starts-with('x-') });
+                           set $keys === set()
+                       }) {
         for %args.kv -> $k, $v {
             my $normalized-name = (%scalar{$k} // %object{$k})<attr>;
             my $attr = %attr-lookup{$normalized-name};
