@@ -2,7 +2,7 @@ use v6.c;
 
 use OpenAPI::Model::Element;
 
-#| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI License object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#licenseObject>.
+#| The OpenAPI::Model::License class represents an L<OpenAPI License object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#licenseObject>.
 class OpenAPI::Model::License does OpenAPI::Model::Element[
     scalar => {
         name => {},

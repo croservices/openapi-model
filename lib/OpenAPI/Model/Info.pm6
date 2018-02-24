@@ -4,7 +4,7 @@ use OpenAPI::Model::Contact;
 use OpenAPI::Model::Element;
 use OpenAPI::Model::License;
 
-#| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI Info object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#infoObject>.
+#| The OpenAPI::Model::Info class represents an L<OpenAPI Info object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#infoObject>.
 class OpenAPI::Model::Info does OpenAPI::Model::Element[
     scalar => {
         title => {},

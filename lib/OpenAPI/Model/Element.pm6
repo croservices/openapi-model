@@ -1,3 +1,4 @@
+use v6.c;
 use JSON::Fast;
 
 class X::OpenAPI::Model::TypeMismatch is Exception {

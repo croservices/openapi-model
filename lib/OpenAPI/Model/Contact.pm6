@@ -2,7 +2,7 @@ use v6.c;
 
 use OpenAPI::Model::Element;
 
-#| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#contactObject>.
+#| The OpenAPI::Model::Contact class represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#contactObject>.
 class OpenAPI::Model::Contact does OpenAPI::Model::Element[
     scalar => {
         name => {},

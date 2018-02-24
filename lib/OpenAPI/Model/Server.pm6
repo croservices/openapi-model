@@ -3,7 +3,7 @@ use v6.c;
 use OpenAPI::Model::Element;
 use OpenAPI::Model::Variable;
 
-#| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI Server object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject>.
+#| The OpenAPI::Model::Server class represents an L<OpenAPI Server object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject>.
 class OpenAPI::Model::Server does OpenAPI::Model::Element[
     scalar => {
         url => {},
@@ -24,15 +24,15 @@ class OpenAPI::Model::Server does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a server url or Nil.
-    method url() { $!url // Nil }
+    method url()         { $!url         // Nil }
     #| Returns a server description or Nil.
     method description() { $!description // Nil }
     #| Returns a server variables or Nil.
-    method variables() { %!variables // Nil }
+    method variables()   { %!variables   // Nil }
 
     # Setters
     #| Adds variable for the server by id.
-    multi method set-variable(Str $id, OpenAPI::Model::Variable:D $variable --> Nil) {
+    method set-variable(Str $id, OpenAPI::Model::Variable:D $variable --> Nil) {
         %!variables{$id} = $variable;
     }
     #| Deletes variable of server by id.

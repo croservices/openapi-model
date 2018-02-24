@@ -2,7 +2,7 @@ use v6.c;
 
 use OpenAPI::Model::Element;
 
-#| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI Server Variable object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverVariableObject>.
+#| The OpenAPI::Model::Variable class represents an L<OpenAPI Server Variable object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverVariableObject>.
 class OpenAPI::Model::Variable does OpenAPI::Model::Element[
     scalar => {
         enum => {},
@@ -18,9 +18,9 @@ class OpenAPI::Model::Variable does OpenAPI::Model::Element[
 
     # Getters
     #| Returns  an enumeration of string values to be used if the substitution options are from a limited set or Nil.
-    method enum() { @!enum // Nil }
+    method enum()        { @!enum        // Nil }
     #| Returns the default value to use for substitution, and to send, if an alternate value is not supplied or Nil.
-    method default() { $!default // Nil }
+    method default()     { $!default     // Nil }
     #| Returns an optional description for the server variable or Nil.
     method description() { $!description // Nil }
 }
