@@ -1,1 +1,0 @@
-class OpenAPI::Model::Component {}

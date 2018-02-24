@@ -3,8 +3,8 @@ use v6.c;
 use OpenAPI::Model::Element;
 use OpenAPI::Model::Info;
 use OpenAPI::Model::Server;
-use OpenAPI::Model::Path;
-use OpenAPI::Model::Component;
+use OpenAPI::Model::Paths;
+use OpenAPI::Model::Components;
 use OpenAPI::Model::Security;
 use OpenAPI::Model::Tag;
 use OpenAPI::Model::ExternalDocs;
@@ -20,15 +20,20 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
             attr => 'info',
             type => OpenAPI::Model::Info
         },
-        paths => {
-            attr => 'paths',
-            type => OpenAPI::Model::Paths
-        },
         servers => {
             attr => 'servers',
             type => OpenAPI::Model::Server,
             array => True
+        },
+        paths => {
+            attr => 'paths',
+            type => OpenAPI::Model::Paths
+        },
+        components => {
+            attr => 'components',
+            type => OpenAPI::Model::Components
         }
+        
     }] {
     has Str $.openapi is required is rw;
     has OpenAPI::Model::Info $.info is required;
