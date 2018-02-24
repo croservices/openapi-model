@@ -18,21 +18,43 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
 
     method set-model($!model) {}
 
+    method !handle-refy($spec, $v) {
+        if $spec<array> {
+            return $v.map({
+                    $_<$ref> ?? OpenAPI::Model::Reference.new($_<$ref>)
+                             !! $spec<type>.deserialize($_)
+                });
+        } elsif $spec<hash> {
+            return $v.kv.map({
+                    .key => .value<$ref> ?? OpenAPI::Model::Reference.new(.value<$ref>)
+                                         !! $spec<type>.deserialize(.value)
+                }).Hash;
+        } else {
+            return $v<$ref> ?? OpenAPI::Model::Reference.new(ref => $v<$ref>)
+                            !! $spec<type>.deserialize($v);
+        }
+    }
+
+    method !handle-object($spec, $v) {
+        with $spec<ref> {
+            return self!handle-refy($spec, $v);
+        }
+        if $spec<array> {
+            return $v.map({$spec<type>.deserialize($_)}).Array;
+        } elsif $spec<hash> {
+            return $v.map({ .key => $spec<type>.deserialize(.value) }).Hash;
+        } else {
+            return $spec<type>.deserialize($v);
+        }
+    }
+
     method deserialize($source) {
         my %attrs;
         for $source.kv -> $k, $v {
             if $k (elem) %scalar.keys {
                 %attrs{$k} = $v;
-            } elsif %object{$k}<array> {
-                %attrs{$k} = $v.map({%object{$k}<type>.deserialize($_)}).Array;
-            } elsif %object{$k}<hash> {
-                my %map;
-                for $v.kv -> $in-key, $in-value {
-                    %map{$in-key} = %object{$k}<type>.deserialize($in-value);
-                }
-                %attrs{$k} = %map;
             } else {
-                %attrs{$k} = %object{$k}<type>.deserialize($v);
+                %attrs{$k} = self!handle-object(%object{$k}, $v);
             }
         }
         self.new(|%attrs);
