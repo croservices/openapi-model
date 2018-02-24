@@ -21,21 +21,29 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
     method deserialize($source) {
         my %attrs;
         for $source.kv -> $k, $v {
-            %attrs{$k} = $k (elem) %scalar.keys ??
-                       $v !!
-                       %object{$k}<array> ??
-                       $v.map({%object{$k}<type>.new(|$_)}).Array !!
-                       %object{$k}<type>.new(|$v);
+            if $k (elem) %scalar.keys {
+                %attrs{$k} = $v;
+            } elsif %object{$k}<array> {
+                %attrs{$k} = $v.map({%object{$k}<type>.deserialize($_)}).Array;
+            } elsif %object{$k}<hash> {
+                my %map;
+                for $v.kv -> $in-key, $in-value {
+                    %map{$in-key} = %object{$k}<type>.deserialize($in-value);
+                }
+                %attrs{$k} = %map;
+            } else {
+                %attrs{$k} = %object{$k}<type>.deserialize($v);
+            }
         }
         self.new(|%attrs);
     }
     method serialize() {
         my %structure;
         for %scalar.kv -> $k, $v {
-            %structure{$k} = %attr-lookup{%scalar{$k}<attr>}.get_value(self);
+            %structure{$k} = %attr-lookup{%scalar{$k}<attr> // $k}.get_value(self);
         }
         for %object.kv -> $k, $v {
-            %structure{$k} = %attr-lookup{%object{$k}<attr>}.get_value(self).serialize;
+            %structure{$k} = %attr-lookup{%object{$k}<attr> // $k}.get_value(self).serialize;
         }
         %structure;
     }
@@ -46,18 +54,21 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
                            set $keys === set()
                        }) {
         for %args.kv -> $k, $v {
-            my $normalized-name = (%scalar{$k} // %object{$k})<attr>;
+            my $normalized-name = (%scalar{$k} // %object{$k})<attr> // $k;
             my $attr = %attr-lookup{$normalized-name};
             if $k (elem) %scalar.keys {
                 $attr.set_value(self, $v);
             } elsif $k (elem) %object.keys {
-                my $attr-type = %object{$k}<array> ?? [%object{$k}<type>] !! %object{$k}<type>;
-                if $v ~~ $attr-type || $v ~~ [] {
+                my $spec = %object{$k};
+                my $cond = $spec<array> ?? so $v.map({$_ ~~ $spec<type>}).all !!
+                           $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type>}).all !!
+                           $v ~~ $spec<type>;
+                if $cond {
                     $attr.set_value(self, $v);
                 } else {
                     die X::OpenAPI::Model::TypeMismatch.new(
                         name => ::?CLASS.^name, field => $k,
-                        expected => %object{$k}<type>, got => $v);
+                        expected => $spec<type>, got => $v);
                 }
             }
         }
