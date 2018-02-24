@@ -21,7 +21,11 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
     method deserialize($source) {
         my %attrs;
         for $source.kv -> $k, $v {
-            %attrs{$k} = $k (elem) %scalar.keys ?? $v !! %object{$k}<type>.new(|$v);
+            %attrs{$k} = $k (elem) %scalar.keys ??
+                       $v !!
+                       %object{$k}<array> ??
+                       $v.map({%object{$k}<type>.new(|$_)}).Array !!
+                       %object{$k}<type>.new(|$v);
         }
         self.new(|%attrs);
     }
@@ -36,23 +40,21 @@ role OpenAPI::Model::Element [:%scalar, :%object] {
         %structure;
     }
 
-    submethod BUILD(*%args where {(%scalar.keys (|) %object.keys) (-) .keys === set()}) {
+    submethod BUILD(*%args where {(set ((%scalar.keys (|) %object.keys) (-) .keys)
+                                   .grep({ not .key.starts-with('x-') })) === set()}) {
         for %args.kv -> $k, $v {
             my $normalized-name = (%scalar{$k} // %object{$k})<attr>;
             my $attr = %attr-lookup{$normalized-name};
-            if ($k (elem) %scalar.keys) {
+            if $k (elem) %scalar.keys {
                 $attr.set_value(self, $v);
-            } elsif ($k (elem) %object.keys) {
-                my $attr-type = $v ~~ Positional ?? [%object{$k}<type>] !! %object{$k}<type>;
-                if ($v ~~ $attr-type) {
+            } elsif $k (elem) %object.keys {
+                my $attr-type = %object{$k}<array> ?? [%object{$k}<type>] !! %object{$k}<type>;
+                if $v ~~ $attr-type || $v ~~ [] {
                     $attr.set_value(self, $v);
                 } else {
                     die X::OpenAPI::Model::TypeMismatch.new(
-                        name => ::?CLASS.^name,
-                        field => $k,
-                        expected => %object{$k}<type>,
-                        got => $v
-                    );
+                        name => ::?CLASS.^name, field => $k,
+                        expected => %object{$k}<type>, got => $v);
                 }
             }
         }

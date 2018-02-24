@@ -23,6 +23,11 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
         paths => {
             attr => 'paths',
             type => OpenAPI::Model::Path
+        },
+        servers => {
+            attr => 'servers',
+            type => OpenAPI::Model::Server,
+            array => True
         }
     }] {
     has Str $.openapi is required is rw;
@@ -35,7 +40,9 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     has OpenAPI::Model::ExternalDocs $!external-docs;
 
     # Accessors
+    method info()          { $!info          // Nil }
     method servers()       { @!servers       // Nil }
+    method paths()         { @!paths         // Nil }
     method components()    { $!components    // Nil }
     method security()      { @!security      // Nil }
     method tags()          { @!tags          // Nil }

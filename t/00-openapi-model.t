@@ -10,7 +10,8 @@ my $json-doc = q:to/END/;
         "termsOfService": "http://example.com/terms/",
         "version": "1.0.1"
     },
-    "paths": {}
+    "paths": {},
+    "servers": []
 }
 END
 
