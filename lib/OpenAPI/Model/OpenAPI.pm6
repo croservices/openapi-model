@@ -67,9 +67,9 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     method paths()         { $!paths         // Nil }
     #| Returns an L<OpenAPI Components object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#componentsObject> or Nil.
     method components()    { $!components    // Nil }
-    #| Returns an Array of L<OpenAPI Security Requirement objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject>.
+    #| Returns an Array of L<OpenAPI Security Requirement objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject> or Nil.
     method security()      { @!security      // Nil }
-    #| Returns an Array of L<OpenAPI Tag objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#tagObject>.
+    #| Returns an Array of L<OpenAPI Tag objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#tagObject> or Nil.
     method tags()          { @!tags          // Nil }
     #| Returns an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject> or Nil.
     method external-docs() { $!external-docs // Nil }
