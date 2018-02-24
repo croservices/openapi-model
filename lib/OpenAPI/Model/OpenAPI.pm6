@@ -1,13 +1,13 @@
 use v6.c;
 
-use OpenAPI::Model::Element;
-use OpenAPI::Model::Info;
-use OpenAPI::Model::Server;
-use OpenAPI::Model::Paths;
 use OpenAPI::Model::Components;
-use OpenAPI::Model::Security;
-use OpenAPI::Model::Tag;
+use OpenAPI::Model::Element;
 use OpenAPI::Model::ExternalDocs;
+use OpenAPI::Model::Info;
+use OpenAPI::Model::Paths;
+use OpenAPI::Model::Security;
+use OpenAPI::Model::Server;
+use OpenAPI::Model::Tag;
 
 #| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI document object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasObject>.
 class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
@@ -104,12 +104,12 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     #| Adds given Security Requirenments to Security Requirenments array.
     multi method add-security(OpenAPI::Model::Security $security) { @!security.push: $security }
     #| Removes given Security Requirenments from Security Requirenments array.
-    multi method remove-security(--> Nil) {}
+    multi method remove-security(OpenAPI::Model::Security $security --> Nil) { @!security .= grep({ not $_ eqv $security}) }
 
     #| Adds given Tag to Tag array.
     multi method add-tag(OpenAPI::Model::Tag $tag) { @!tags.push: $tag }
     #| Removes given Tag from Tag array.
-    multi method remove-tag(OpenAPI::Model::Tag $tag --> Nil) {}
+    multi method remove-tag(OpenAPI::Model::Tag $tag --> Nil) { @!tag .= grep({ not $_ eqv $tag}) }
 
     #| Sets External Documentation to Nil.
     multi method set-external-docs(Any:U) { $!external-docs = Nil }
