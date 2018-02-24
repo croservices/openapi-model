@@ -57,4 +57,7 @@ my $api;
 
 lives-ok { $api = OpenAPI::Model.from-json($json-doc) }, 'Can parse the document';
 
+is $api.info.title, 'Sample Pet Store App', 'Info title is correct';
+is $api.info.terms-of-service, 'http://example.com/terms/', 'Info terms of service is correct';
+
 done-testing;

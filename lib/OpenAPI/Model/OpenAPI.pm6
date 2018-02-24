@@ -109,7 +109,7 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     #| Adds given Tag to Tag array.
     multi method add-tag(OpenAPI::Model::Tag $tag) { @!tags.push: $tag }
     #| Removes given Tag from Tag array.
-    multi method remove-tag(OpenAPI::Model::Tag $tag --> Nil) { @!tag .= grep({ not $_ eqv $tag}) }
+    multi method remove-tag(OpenAPI::Model::Tag $tag --> Nil) { @!tags .= grep({ not $_ eqv $tag}) }
 
     #| Sets External Documentation to Nil.
     multi method set-external-docs(Any:U) { $!external-docs = Nil }
