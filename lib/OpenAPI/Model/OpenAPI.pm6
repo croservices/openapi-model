@@ -11,35 +11,27 @@ use OpenAPI::Model::ExternalDocs;
 
 class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     scalar => {
-        openapi => {
-            attr => 'openapi'
-        }
+        openapi => {}
     },
     object => {
         info => {
-            attr => 'info',
             type => OpenAPI::Model::Info
         },
         servers => {
-            attr => 'servers',
             type => OpenAPI::Model::Server,
             array => True
         },
         paths => {
-            attr => 'paths',
             type => OpenAPI::Model::Paths
         },
         components => {
-            attr => 'components',
             type => OpenAPI::Model::Components
         },
         security => {
-            attr => 'security',
             type => OpenAPI::Model::Security,
             array => True
         },
         tags => {
-            attr => 'tags',
             type => OpenAPI::Model::Tag,
             array => True
         },
@@ -50,12 +42,12 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
     }] {
     has Str $.openapi is required is rw;
     has OpenAPI::Model::Info $.info is required;
-    has OpenAPI::Model::Server @!servers;
+    has OpenAPI::Model::Server @.servers;
     has OpenAPI::Model::Paths @.paths is required;
-    has OpenAPI::Model::Components $!components;
-    has OpenAPI::Model::Security @!security;
-    has OpenAPI::Model::Tag @!tags;
-    has OpenAPI::Model::ExternalDocs $!external-docs;
+    has OpenAPI::Model::Components $.components;
+    has OpenAPI::Model::Security @.security;
+    has OpenAPI::Model::Tag @.tags;
+    has OpenAPI::Model::ExternalDocs $.external-docs;
 
     # Accessors
     method info()          { $!info          // Nil }
