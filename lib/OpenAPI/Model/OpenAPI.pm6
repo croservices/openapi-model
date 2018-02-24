@@ -22,7 +22,7 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
         },
         paths => {
             attr => 'paths',
-            type => OpenAPI::Model::Path
+            type => OpenAPI::Model::Paths
         },
         servers => {
             attr => 'servers',
