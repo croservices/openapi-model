@@ -12,53 +12,62 @@ class X::OpenAPI::Model::TypeMismatch is Exception {
     }
 }
 
-role OpenAPI::Model::Element [:%scalar, :%object] {
+role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
     has $.model;
     has %.extensions;
     my %attr-lookup = ::?CLASS.^attributes(:local).map({ .name.substr(2) => $_ });
 
     method set-model($!model) {}
 
-    method !handle-refy($spec, $v) {
+    method !handle-refy($spec, $v, $model) {
         if $spec<array> {
             return $v.map({
                     $_<$ref> ?? OpenAPI::Model::Reference.new($_<$ref>)
-                             !! $spec<type>.deserialize($_)
-                });
+                             !! $spec<type>.deserialize($_, $model)
+                }).Array;
         } elsif $spec<hash> {
+            with $spec<raw> {
+                return $spec<type>.new(|$v);
+            }
             return $v.kv.map({
                     .key => .value<$ref> ?? OpenAPI::Model::Reference.new(.value<$ref>)
-                                         !! $spec<type>.deserialize(.value)
+                                         !! $spec<type>.deserialize(.value, $model)
                 }).Hash;
         } else {
             return $v<$ref> ?? OpenAPI::Model::Reference.new(ref => $v<$ref>)
-                            !! $spec<type>.deserialize($v);
+                            !! $spec<type>.deserialize($v, $model);
         }
     }
 
-    method !handle-object($spec, $v) {
+    method !handle-object($spec, $v, $model) {
         with $spec<ref> {
-            return self!handle-refy($spec, $v);
+            return self!handle-refy($spec, $v, $model);
         }
         if $spec<array> {
-            return $v.map({$spec<type>.deserialize($_)}).Array;
+            return $v.map({$spec<type>.deserialize($_, $model)}).Array;
         } elsif $spec<hash> {
-            return $v.map({ .key => $spec<type>.deserialize(.value) }).Hash;
+            return $v.map({ .key => $spec<type>.deserialize(.value, $model) }).Hash;
         } else {
-            return $spec<type>.deserialize($v);
+            if $spec.defined {
+                return $spec<type>.deserialize($v, $model);
+            } elsif $patterned !~~ Nil {
+                return $patterned.deserialize($v, $model);
+            }
         }
     }
 
-    method deserialize($source) {
+    method deserialize($source, $model) {
         my %attrs;
         for $source.kv -> $k, $v {
             if $k (elem) %scalar.keys {
                 %attrs{$k} = $v;
             } else {
-                %attrs{$k} = self!handle-object(%object{$k}, $v);
+                %attrs{$k} = self!handle-object(%object{$k}, $v, $model);
             }
         }
-        self.new(|%attrs);
+        my $new = self.new(|%attrs);
+        $new.set-model($model);
+        $new;
     }
     method serialize() {
         my %structure;

@@ -19,7 +19,28 @@ my $json-doc = q:to/END/;
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         }
     },
-    "paths": {},
+    "paths": {
+        "/pets": {
+            "get": {
+                "description": "Returns all pets from the system that the user has access to",
+                "responses": {
+                    "200": {
+                        "description": "A list of pets.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/pet"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
     "servers": [
         {
             "url": "https://development.gigantic-server.com/v1",
@@ -78,5 +99,13 @@ is $api.servers[2].variables<port>.enum[1], 443, 'port variable of third server 
 
 lives-ok { $api.servers[0].set-variable("song", OpenAPI::Model::Variable.new(default => "Parting", description => "Variable of song")) }, 'Can add variable for server';
 is $api.servers[0].variables.elems, 1, 'Variable was added';
+
+ok $api.paths.kv.elems == 2, 'Paths Object has correct number of elements from kv';
+ok $api.paths</pets>:exists, 'EXISTS-KEY works';
+my $path = $api.paths</pets>;
+$api.paths.delete-path('/pets');
+ok $api.paths.kv.elems == 0, 'Path was removed';
+$api.paths.set-path('/pets', $path);
+ok $api.paths.kv.elems == 2, 'Path was set for Paths object';
 
 done-testing;

@@ -18,6 +18,7 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
         schemas => {
             hash => True,
             ref => True,
+            raw => True,
             type => OpenAPI::Model::Schema
         },
         responses => {

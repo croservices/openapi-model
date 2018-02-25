@@ -35,7 +35,6 @@ class OpenAPI::Model::Info does OpenAPI::Model::Element[
     #| Represents an L<OpenAPI License object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#licenseObject>.
     has OpenAPI::Model::License $.license;
 
-    
     # Getters
     #| Returns an application title or Nil.
     method title()            { $!title            // Nil }
@@ -46,9 +45,9 @@ class OpenAPI::Model::Info does OpenAPI::Model::Element[
     #| Returns a version of the OpenAPI document or Nil.
     method version()          { $!version          // Nil }
     #| Returns an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#contactObject> or Nil.
-    method contact() { $!contact                   // Nil }
+    method contact()          { $!contact          // Nil }
     #| Returns an L<OpenAPI License object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#licenseObject> or Nil.
-    method license() { $!license                   // Nil }
+    method license()          { $!license          // Nil }
 
     # Setters
     #| Sets Contact to Nil.

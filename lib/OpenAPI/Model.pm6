@@ -9,9 +9,10 @@ class OpenAPI::Model {
     }
 
     method from-yaml($yaml, :%external, :$check-references) {
-        OpenAPI::Model::OpenAPI.deserialize(load-yaml $yaml);
+        OpenAPI::Model::OpenAPI.deserialize((load-yaml $yaml), self);
     }
     method from-json($json, :%external, :$check-references) {
-        OpenAPI::Model::OpenAPI.deserialize(from-json $json);
+        CATCH {.note}
+        OpenAPI::Model::OpenAPI.deserialize((from-json $json), self);
     }
 }
