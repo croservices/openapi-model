@@ -46,6 +46,6 @@ lives-ok { $api = OpenAPI::Model::RequestBody.deserialize(load-yaml($yaml), Open
 
 is $api.content<multipart/mixed>.encoding<historyMetadata>.content-type, 'application/xml; charset=utf-8', 'Check Content-Type of content';
 
-is $api.content<multipart/mixed>.encoding<historyMetadata>.headers<X-Rate-Limit-Limit>.description, 'The number of allowed requests in the current period', 'Check header description of encoding';
+is $api.content<multipart/mixed>.encoding<profileImage>.headers<X-Rate-Limit-Limit>.description, 'The number of allowed requests in the current period', 'Check header description of encoding';
 
 done-testing;

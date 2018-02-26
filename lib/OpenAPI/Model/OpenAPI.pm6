@@ -278,10 +278,6 @@ class OpenAPI::Model::ExternalDocs does OpenAPI::Model::Element[
     method url()         { $!url         // Nil }
 }
 
-class OpenAPI::Model::Header does OpenAPI::Model::Element[
-    scalar => {},
-    object => {}] {}
-
 #| The OpenAPI::Model::Info class represents an L<OpenAPI Info object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#infoObject>.
 class OpenAPI::Model::Info does OpenAPI::Model::Element[
     scalar => {
@@ -705,10 +701,10 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
         }
     }] {
     #| Represents name of the parameter.
-    has Str $.name is required is rw;
+    has Str $.name is rw;
     #| Represents location of the parameter.
     subset In of Str where 'query'|'header'|'path'|'cookie';
-    has In $.in is required is rw;
+    has In $.in is rw;
     #| Represents a brief description of the parameter.
     has Str $.description is rw;
     #| Represents whether Parameter is required or not.
@@ -786,6 +782,9 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     #| Deletes content from Parameter by id.
     method delete-content(Str $id) { %!content{$id}:delete }
 }
+
+#| The OpenAPI::Model::Header class represents an L<OpenAPI Header object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#headerObject>.
+class OpenAPI::Model::Header is OpenAPI::Model::Parameter {}
 
 #| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI Path object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathObject>.
 class OpenAPI::Model::Path does OpenAPI::Model::Element[
