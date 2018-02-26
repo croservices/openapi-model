@@ -50,8 +50,6 @@ my $json3 = q:to/END/;
 }
 END
 
-$api = OpenAPI::Model::SecurityScheme.deserialize((from-json $json3), OpenAPI::Model.new);
-
-say $api;
+lives-ok { $api = OpenAPI::Model::SecurityScheme.deserialize((from-json $json3), OpenAPI::Model.new) }, 'Security Scheme is parsed';
 
 done-testing;
