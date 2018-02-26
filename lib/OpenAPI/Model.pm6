@@ -1,4 +1,3 @@
-use OpenAPI::Model::Operation;
 use OpenAPI::Model::OpenAPI;
 use JSON::Fast;
 use YAMLish;
