@@ -1,3 +1,8 @@
 use v6.c;
 
-class OpenAPI::Model::Header {}
+use OpenAPI::Model::Element;
+
+class OpenAPI::Model::Header does OpenAPI::Model::Element[
+    scalar => {},
+    object => {}] {}
+
