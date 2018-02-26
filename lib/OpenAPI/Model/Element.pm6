@@ -29,7 +29,7 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
             with $spec<raw> {
                 return $spec<type>.new(|$v);
             }
-            return $v.kv.map({
+            return $v.map({
                     .key => .value<$ref> ?? OpenAPI::Model::Reference.new(.value<$ref>)
                                          !! $spec<type>.deserialize(.value, $model)
                 }).Hash;
@@ -46,6 +46,9 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
         if $spec<array> {
             return $v.map({$spec<type>.deserialize($_, $model)}).Array;
         } elsif $spec<hash> {
+            with $spec<raw> {
+                return $spec<type>.new(|$v);
+            }
             return $v.map({ .key => $spec<type>.deserialize(.value, $model) }).Hash;
         } else {
             if $spec.defined {
