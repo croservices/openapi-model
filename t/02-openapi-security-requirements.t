@@ -2,8 +2,6 @@ use v6.c;
 use Test;
 use JSON::Fast;
 use OpenAPI::Model;
-use OpenAPI::Model::Security;
-use OpenAPI::Model::SecurityScheme;
 
 my $json1 = q:to/END/;
 {

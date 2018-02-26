@@ -2,7 +2,6 @@ use v6.c;
 use Test;
 use YAMLish;
 use OpenAPI::Model;
-use OpenAPI::Model::RequestBody;
 
 my $yaml = q:to/END/;
 content:
