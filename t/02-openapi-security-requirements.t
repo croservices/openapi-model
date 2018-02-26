@@ -3,6 +3,7 @@ use Test;
 use JSON::Fast;
 use OpenAPI::Model;
 use OpenAPI::Model::Security;
+use OpenAPI::Model::SecurityScheme;
 
 my $json1 = q:to/END/;
 {
@@ -28,5 +29,29 @@ ok $api<api_key> == [], 'First schema is parsed';
 lives-ok { $api = OpenAPI::Model::Security.deserialize((from-json $json2), OpenAPI::Model.new) }, 'Can parse non-empty rule';
 
 ok $api<petstore_auth> eqv ["write:pets", "read:pets"], 'Second schema is parsed';
+
+my $json3 = q:to/END/;
+{
+  "type": "apiKey",
+  "name": "api_key",
+  "in": "header",
+  "scheme": "oauth2",
+  "flows": {
+    "implicit": {
+      "authorizationUrl": "https://example.com/api/oauth/dialog",
+      "tokenUrl": "https://example.com/api/oauth/token",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    }
+  },
+  "openIdConnectUrl": "http://example.com"
+}
+END
+
+$api = OpenAPI::Model::SecurityScheme.deserialize((from-json $json3), OpenAPI::Model.new);
+
+say $api;
 
 done-testing;
