@@ -2,7 +2,7 @@ use v6.c;
 use Test;
 use OpenAPI::Model;
 
-my $yaml = q:to/END/;
+my $json = q:to/END/;
 {
    "openapi": "3.0.0",
    "info": {
@@ -227,6 +227,6 @@ END
 
 my $api;
 
-lives-ok { $api = OpenAPI::Model.from-json($yaml) }, 'Can parse the document';
+lives-ok { $api = OpenAPI::Model.from-json($json) }, 'Can parse the document';
 
 done-testing;
