@@ -32,21 +32,21 @@ ok $api<petstore_auth> eqv ["write:pets", "read:pets"], 'Second schema is parsed
 
 my $json3 = q:to/END/;
 {
-  "type": "apiKey",
-  "name": "api_key",
-  "in": "header",
-  "scheme": "oauth2",
-  "flows": {
-    "implicit": {
-      "authorizationUrl": "https://example.com/api/oauth/dialog",
-      "tokenUrl": "https://example.com/api/oauth/token",
-      "scopes": {
-        "write:pets": "modify pets in your account",
-        "read:pets": "read your pets"
-      }
-    }
-  },
-  "openIdConnectUrl": "http://example.com"
+    "type": "apiKey",
+    "name": "api_key",
+    "in": "header",
+    "scheme": "oauth2",
+    "flows": {
+        "implicit": {
+            "authorizationUrl": "https://example.com/api/oauth/dialog",
+            "tokenUrl": "https://example.com/api/oauth/token",
+            "scopes": {
+                "write:pets": "modify pets in your account",
+                "read:pets": "read your pets"
+            }
+        }
+    },
+    "openIdConnectUrl": "http://example.com"
 }
 END
 
