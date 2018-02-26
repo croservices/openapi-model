@@ -50,6 +50,8 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
         } else {
             if $spec.defined {
                 return $spec<type>.deserialize($v, $model);
+            } elsif $patterned == True {
+                return $v;
             } elsif $patterned !~~ Nil {
                 return $patterned.deserialize($v, $model);
             }
