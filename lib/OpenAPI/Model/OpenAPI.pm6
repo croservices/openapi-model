@@ -162,7 +162,22 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
     method delete-callback(Str $id) { %!callbacks{$id}:delete }
 }
 
-class OpenAPI::Model::Callback {}
+#| The OpenAPI::Model::Callback class represents an L<OpenAPI Callback object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#callbackObject>.
+class OpenAPI::Model::Callback does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
+    scalar => {},
+    object => {},
+    :patterned(OpenAPI::Model::Path)] {
+    submethod TWEAK(*%args) {
+        self!set-fields(%args)
+    }
+
+    #| Adds path to callback by id.
+    method set-path(Str $id, OpenAPI::Model::Path $path) { %!container{$id} = $path }
+    #| Deletes path from callback by id.
+    method delete-path(Str $id) { %!container{$id}:delete }
+    #| Returns OpenAPI::Model::Path object by id.
+    method get-path(Str $id) { %!container{$id} }
+}
 
 #| The OpenAPI::Model::Contact class represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#contactObject>.
 class OpenAPI::Model::Contact does OpenAPI::Model::Element[
@@ -257,7 +272,36 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     method delete-header(Str $id) { %!headers{$id}:delete }
 }
 
-class OpenAPI::Model::Example {}
+#| The OpenAPI::Model::Example class represents an L<OpenAPI Example Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#exampleObject>.
+class OpenAPI::Model::Example does OpenAPI::Model::Element[
+    scalar => {
+        summary => {},
+        description => {},
+        value => {},
+        externalValue => {
+            attr => 'external-value'
+        }
+    },
+    object => {}] {
+    #| Represents short description for the example.
+    has Str $.summary is rw;
+    #| Represents long description for the example.
+    has Str $.description is rw;
+    #| Represents embedded liberal example.
+    has $.value is rw;
+    #| Represents URL that points to the literal example.
+    has Str $.external-value is rw;
+
+    # Getters
+    #| Returns short description for the example or Nil.
+    method summary()        { $!summary        // Nil }
+    #| Returns long description for the example or Nil.
+    method description()    { $!description    // Nil }
+    #| Returns embedded liberal example or Nil.
+    method value()          { $!value          // Nil }
+    #| Returns URL that points to the literal example or Nil.
+    method external-value() { $!external-value // Nil }
+}
 
 #| The OpenAPI::Model::ExternalDocs class represents an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject>.
 class OpenAPI::Model::ExternalDocs does OpenAPI::Model::Element[
@@ -357,7 +401,61 @@ class OpenAPI::Model::License does OpenAPI::Model::Element[
     method url()   { $!url // Nil }
 }
 
-class OpenAPI::Model::Link {}
+#| The OpenAPI::Model::MediaType class represents an L<OpenAPI Media Type object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#mediaTypeObject>.
+class OpenAPI::Model::Link does OpenAPI::Model::Element[
+    scalar => {
+        operationRef => {
+            attr => 'operation-ref'
+        },
+        operationId => {
+            attr => 'operation-id'
+        },
+        parameters => {},
+        requestBody => {
+            attr => 'request-body'
+        },
+        description => {}
+    },
+    object => {
+        server => {
+            type => OpenAPI::Model::Server
+        }
+    }] {
+    #| Represents relative or absolute reference to an OAS operation.
+    has Str $.operation-ref is rw;
+    #| Represents name of an existing, resolvable OAS operation, as defined with a unique operationId.
+    has Str $.operation-id is rw;
+    #| Represents a hash that holds parameters to pass.
+    has %.parameters is rw;
+    #| Represents value to use as a request body when calling the target operation.
+    has $.request-body is rw;
+    #| Represents description of the link.
+    has Str $.description is rw;
+    #| Represents server object to be used by the target operation.
+    has OpenAPI::Model::Server $.server;
+
+    # Getters
+    #| Returns relative or absolute reference to an OAS operation or Nil.
+    method operation-ref() { $!operation-ref // Nil }
+    #| Returns name of an existing, resolvable OAS operation, as defined with a unique operationId or Nil.
+    method operation-id() { $!operation-id // Nil }
+    #| Returns a hash that holds parameters to pass or Nil.
+    method parameters() { %!parameters // Nil }
+    #| Returns value to use as a request body when calling the target operation or Nil.
+    method request-body() { $!request-body // Nil }
+    #| Returns description of the link or Nil.
+    method description() { $!description // Nil }
+    #| Returns server object to be used by the target operation or Nil.
+    method server() { $!server // Nil }
+
+    # Setters
+    #| Sets server to Nil.
+    multi method set-server(Any:U) { $!server = Nil }
+    #| Sets server to given value.
+    multi method set-server(OpenAPI::Model::Server:D $!server --> Nil) {
+        $!server.set-model($!model);
+    }
+}
 
 #| The OpenAPI::Model::MediaType class represents an L<OpenAPI Media Type object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#mediaTypeObject>.
 class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
