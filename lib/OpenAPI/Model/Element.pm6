@@ -20,14 +20,12 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
 
     method !handle-refy($spec, $v, $model) {
         if $spec<array> {
+            return $spec<type>.new(|$v) with $spec<raw>;
             return $v.map({
                     $_<$ref> ?? OpenAPI::Model::Reference.new($_<$ref>)
                              !! $spec<type>.deserialize($_, $model)
                 }).Array;
         } elsif $spec<hash> {
-            with $spec<raw> {
-                return $spec<type>.new(|$v);
-            }
             return $v.map({
                     .key => .value<$ref> ?? OpenAPI::Model::Reference.new(.value<$ref>)
                                          !! $spec<type>.deserialize(.value, $model)
@@ -39,15 +37,11 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
     }
 
     method !handle-object($spec, $v, $model) {
-        with $spec<ref> {
-            return self!handle-refy($spec, $v, $model);
-        }
+        return self!handle-refy($spec, $v, $model) with $spec<ref>;
+        return $spec<type>.new(|$v) with $spec<raw>;
         if $spec<array> {
             return $v.map({$spec<type>.deserialize($_, $model)}).Array;
         } elsif $spec<hash> {
-            with $spec<raw> {
-                return $spec<type>.new(|$v);
-            }
             return $v.map({ .key => $spec<type>.deserialize(.value, $model) }).Hash;
         } else {
             if $spec.defined {

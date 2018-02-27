@@ -38,6 +38,7 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
         schemas => {
             hash => True,
             ref => True,
+            raw => True,
             type => OpenAPI::Model::Schema
         },
         responses => {
@@ -461,6 +462,7 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
     },
     object => {
         schema => {
+            raw => True,
             type => OpenAPI::Model::Schema
         },
         examples => {
@@ -783,6 +785,7 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     object => {
         schema => {
             type => OpenAPI::Model::Schema,
+            raw => True,
             ref => True
         },
         examples => {
@@ -916,13 +919,13 @@ class OpenAPI::Model::Path does OpenAPI::Model::Element[
             type => OpenAPI::Model::Operation
         },
         servers => {
+            array => True,
             type => OpenAPI::Model::Server,
-            array => True
         },
         parameters => {
-            type => OpenAPI::Model::Parameter,
             ref => True,
-            array => True
+            array => True,
+            type => OpenAPI::Model::Parameter
         }
     }] {
     #| Represents an external definition of this path item.
@@ -1170,6 +1173,8 @@ class OpenAPI::Model::Schema does OpenAPI::Model::Element[
     submethod BUILD(*%args) {
         %!schema = %args;
     }
+
+    method serialize() { %!schema }
 }
 
 #| The OpenAPI::Model::Security class represents an L<OpenAPI Security Requirement object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject>.

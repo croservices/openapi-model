@@ -1,6 +1,7 @@
 use v6.c;
 use Test;
 use OpenAPI::Model;
+use JSON::Fast;
 
 my $json-doc = q:to/END/;
 {
@@ -99,6 +100,7 @@ is $api.servers[2].variables<port>.enum[1], 443, 'port variable of third server 
 
 lives-ok { $api.servers[0].set-variable("song", OpenAPI::Model::Variable.new(default => "Parting", description => "Variable of song")) }, 'Can add variable for server';
 is $api.servers[0].variables.elems, 1, 'Variable was added';
+lives-ok { $api.servers[0].delete-variable("song") }, 'Can delete variable of server';
 
 ok $api.paths.kv.elems == 2, 'Paths Object has correct number of elements from kv';
 ok $api.paths</pets>:exists, 'EXISTS-KEY works';
@@ -107,5 +109,7 @@ $api.paths.delete-path('/pets');
 ok $api.paths.kv.elems == 0, 'Path was removed';
 $api.paths.set-path('/pets', $path);
 ok $api.paths.kv.elems == 2, 'Path was set for Paths object';
+
+is $api.serialize, from-json($json-doc), 'Serialization works';
 
 done-testing;
