@@ -35,6 +35,13 @@ class OpenAPI::Model::Variable {...}
 # Subsets with references
 subset RefSchema where OpenAPI::Model::Schema|OpenAPI::Model::Reference;
 subset RefExample where OpenAPI::Model::Example|OpenAPI::Model::Reference;
+subset RefResponse where OpenAPI::Model::Response|OpenAPI::Model::Reference;
+subset RefParameter where OpenAPI::Model::Parameter|OpenAPI::Model::Reference;
+subset RefRequestBody where OpenAPI::Model::RequestBody|OpenAPI::Model::Reference;
+subset RefHeader where OpenAPI::Model::Header|OpenAPI::Model::Reference;
+subset RefSecurityScheme where OpenAPI::Model::SecurityScheme|OpenAPI::Model::Reference;
+subset RefLink where OpenAPI::Model::Link|OpenAPI::Model::Reference;
+subset RefCallback where OpenAPI::Model::Callback|OpenAPI::Model::Reference;
 
 #| The OpenAPI::Model::Components class represents an L<OpenAPI Components object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#componentsObject>.
 class OpenAPI::Model::Components does OpenAPI::Model::Element[
@@ -90,23 +97,23 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
         }
     }] {
     #| Represents a hash that holds reusable Schema Objects.
-    has OpenAPI::Model::Schema %.schemas;
+    has RefSchema %.schemas;
     #| Represents a hash that holds reusable Response Objects.
-    has OpenAPI::Model::Response %.responses;
+    has RefResponse %.responses;
     #| Represents a hash that holds reusable Parameter Objects.
-    has OpenAPI::Model::Parameter %.parameters;
+    has RefParameter %.parameters;
     #| Represents a hash that holds reusable Example Objects.
-    has OpenAPI::Model::Example %.examples;
+    has RefExample %.examples;
     #| Represents a hash that holds reusable Request Body Objects.
-    has OpenAPI::Model::RequestBody %.request-bodies;
+    has RefRequestBody %.request-bodies;
     #| Represents a hash that holds reusable Header Objects.
-    has OpenAPI::Model::Header %.headers;
+    has RefHeader %.headers;
     #| Represents a hash that holds reusable Security Scheme Objects.
-    has OpenAPI::Model::SecurityScheme %.security-schemes;
+    has RefSecurityScheme %.security-schemes;
     #| Represents a hash that holds reusable Link Objects.
-    has OpenAPI::Model::Link %.links;
+    has RefLink %.links;
     #| Represents a hash that holds reusable Callback Objects.
-    has OpenAPI::Model::Callback %.callbacks;
+    has RefCallback %.callbacks;
 
     # Getters
     #| Returns a hash that holds reusable Schema Objects.
@@ -130,39 +137,39 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
 
     # Setters
     #| Adds schema into components by id.
-    method set-schema(Str $id, OpenAPI::Model::Schema:D $schema --> Nil) { %!schemas{$id} = $schema }
+    method set-schema(Str $id, RefSchema:D $schema --> Nil) { %!schemas{$id} = $schema }
     #| Deletes schema from components by id.
     method delete-schema(Str $id) { %!schemas{$id}:delete }
     #| Adds response into components by id.
-    method set-response(Str $id, OpenAPI::Model::Response:D $response --> Nil) { %!responses{$id} = $response }
+    method set-response(Str $id, RefResponse:D $response --> Nil) { %!responses{$id} = $response }
     #| Deletes response from components by id.
     method delete-response(Str $id) { %!responses{$id}:delete }
     #| Adds parameter into components by id.
-    method set-parameter(Str $id, OpenAPI::Model::Parameter:D $parameter --> Nil) { %!parameters{$id} = $parameter }
+    method set-parameter(Str $id, RefParameter:D $parameter --> Nil) { %!parameters{$id} = $parameter }
     #| Deletes parameter from components by id.
     method delete-parameter(Str $id) { %!parameters{$id}:delete }
     #| Adds example into components by id.
-    method set-example(Str $id, OpenAPI::Model::Example:D $example --> Nil) { %!examples{$id} = $example }
+    method set-example(Str $id, RefExample:D $example --> Nil) { %!examples{$id} = $example }
     #| Deletes example from components by id.
     method delete-example(Str $id) { %!examples{$id}:delete }
     #| Adds Response Body into components by id.
-    method set-request-body(Str $id, OpenAPI::Model::RequestBody:D $body --> Nil) { %!request-bodies{$id} = $body }
+    method set-request-body(Str $id, RefRequestBody:D $body --> Nil) { %!request-bodies{$id} = $body }
     #| Deletes Response Body from components by id.
     method delete-request-body(Str $id) { %!request-bodies{$id}:delete }
     #| Adds header into components by id.
-    method set-header(Str $id, OpenAPI::Model::Header:D $header --> Nil) { %!headers{$id} = $header }
+    method set-header(Str $id, RefHeader:D $header --> Nil) { %!headers{$id} = $header }
     #| Deletes header from components by id.
     method delete-header(Str $id) { %!headers{$id}:delete }
     #| Adds Security Scheme into components by id.
-    method set-security-scheme(Str $id, OpenAPI::Model::SecurityScheme:D $scheme --> Nil) { %!security-schemes{$id} = $scheme }
+    method set-security-scheme(Str $id, RefSecurityScheme:D $scheme --> Nil) { %!security-schemes{$id} = $scheme }
     #| Deletes Security Scheme from components by id.
     method delete-security-scheme(Str $id) { %!security-schemes{$id}:delete }
     #| Adds link into components by id.
-    method set-link(Str $id, OpenAPI::Model::Link:D $link --> Nil) { %!links{$id} = $link }
+    method set-link(Str $id, RefLink:D $link --> Nil) { %!links{$id} = $link }
     #| Deletes link from components by id.
     method delete-link(Str $id) { %!links{$id}:delete }
     #| Adds callback into components by id.
-    method set-callback(Str $id, OpenAPI::Model::Callback:D $callback --> Nil) { %!callbacks{$id} = $callback }
+    method set-callback(Str $id, RefCallback:D $callback --> Nil) { %!callbacks{$id} = $callback }
     #| Deletes callback from components by id.
     method delete-callback(Str $id) { %!callbacks{$id}:delete }
 }
@@ -248,7 +255,7 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     #| Represents content-type for encoding a specific property.
     has Str $.content-type is rw;
     #| Represents a hash that holds additional information to be provided as headers.
-    has OpenAPI::Model::Header %.headers;
+    has RefHeader %.headers;
     #| Represents style of how the parameter is serialized.
     has Str $.style is rw;
     #| Represents `explode` flag for serialization logic.
@@ -260,17 +267,17 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     #| Returns content-type for encoding a specific property.
     method content-type()   { $!content-type // Nil }
     #| Returns a hash that holds reusable Header Objects.
-    method headers()          { %!headers          // Nil }
+    method headers()        { %!headers          // Nil }
     #| Returns style of how the parameter is serialized.
-    method style()             { $!style             // Nil }
+    method style()          { $!style             // Nil }
     #| Returns `explode` flag for serialization logic.
-    method explode()           { $!explode           // Nil }
+    method explode()        { $!explode           // Nil }
     #| Returns `allowReserved` flag for serialization logic.
-    method allow-reserved()    { $!allow-reserved    // Nil }
+    method allow-reserved() { $!allow-reserved    // Nil }
 
     # Setters
     #| Adds header into encoding by id.
-    method set-header(Str $id, OpenAPI::Model::Header:D $header --> Nil) { %!headers{$id} = $header }
+    method set-header(Str $id, RefHeader:D $header --> Nil) { %!headers{$id} = $header }
     #| Deletes header from encoding by id.
     method delete-header(Str $id) { %!headers{$id}:delete }
 }
@@ -504,7 +511,7 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
     #| Sets schema to Nil.
     multi method set-schema(Any:U) { $!schema = Nil }
     #| Sets schema to given value.
-    multi method set-schema(OpenAPI::Model::Schema:D $!schema --> Nil) {
+    multi method set-schema(RefSchema:D $!schema --> Nil) {
         $!schema.set-model($!model);
     }
 
@@ -514,7 +521,7 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
     }
 
     #| Adds example into media type by id.
-    method set-examples(Str $id, OpenAPI::Model::Example:D $example --> Nil) {
+    method set-examples(Str $id, RefExample:D $example --> Nil) {
         $!example = Nil;
         %!examples{$id} = $example;
     }
@@ -686,13 +693,13 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
     #| Represents an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject>.
     has OpenAPI::Model::ExternalDocs $.external-docs;
     #| Represents an Array of L<OpenAPI Parameter objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject>.
-    has OpenAPI::Model::Parameter @.parameters;
+    has RefParameter @.parameters;
     #| Represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#requestBodyObject>.
-    has OpenAPI::Model::RequestBody $.request-body;
+    has RefRequestBody $.request-body;
     #| Represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responsesObject>.
     has OpenAPI::Model::Responses $.responses;
     #| Represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#callbackObject>.
-    has OpenAPI::Model::Callback %.callbacks;
+    has RefCallback %.callbacks;
     #| Represents an Array of L<OpenAPI Security Requirement objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject>.
     has OpenAPI::Model::Security @.security;
     #| Represents an Array of L<OpenAPI Server objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject>.
@@ -733,14 +740,14 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
     }
 
     #| Adds given Parameter to parameters array.
-    multi method add-parameter(OpenAPI::Model::Parameter $parameter) { $parameter.set-model($!model); @!parameters.push: $parameter }
+    multi method add-parameter(RefParameter $parameter) { $parameter.set-model($!model); @!parameters.push: $parameter }
     #| Removes given Parameter from parameters array.
-    multi method remove-parameter(OpenAPI::Model::Parameter $parameter --> Nil) { @!parameters .= grep({ not $_ eqv $parameter}) }
+    multi method remove-parameter(RefParameter $parameter --> Nil) { @!parameters .= grep({ not $_ eqv $parameter}) }
 
     #| Sets Request Body to Nil.
     multi method set-request-body(Any:U) { $!request-body = Nil }
     #| Sets Request Body to given value.
-    multi method set-request-body(OpenAPI::Model::RequestBody:D $!request-body --> Nil) {
+    multi method set-request-body(RefRequestBody:D $!request-body --> Nil) {
         $!request-body.set-model($!model);
     }
 
@@ -752,7 +759,7 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
     }
 
     #| Adds callback for the operation by id.
-    method set-callback(Str $id, OpenAPI::Model::Callback:D $callback --> Nil) {
+    method set-callback(Str $id, RefCallback:D $callback --> Nil) {
         %!callbacks{$id} = $callback;
     }
     #| Deletes callback for the operation by id.
@@ -825,11 +832,11 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     #| Represents `allowReserved` flag for serialization logic.
     has Bool $.allow-reserved is rw;
     #| Represents schema that defines the type used for the parameter.
-    has OpenAPI::Model::Schema $.schema;
+    has RefSchema $.schema;
     #| Represents example of the media type.
     has $.example is rw;
     #| Represents a hash of examples based on media type.
-    has OpenAPI::Model::Example %.examples;
+    has RefExample %.examples;
     #| Represents a hash that holds representations of the parameter.
     has OpenAPI::Model::MediaType %.content;
 
@@ -865,7 +872,7 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     #| Sets schema to Nil.
     multi method set-schema(Any:U) { $!schema = Nil }
     #| Sets schema to given value.
-    multi method set-schema(OpenAPI::Model::Schema:D $!schema --> Nil) {
+    multi method set-schema(RefSchema:D $!schema --> Nil) {
         $!schema.set-model($!model);
     }
 
@@ -875,7 +882,7 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     }
 
     #| Adds example into Parameter by id.
-    method set-examples(Str $id, OpenAPI::Model::Example:D $example --> Nil) {
+    method set-examples(Str $id, RefExample:D $example --> Nil) {
         $!example = Nil;
         %!examples{$id} = $example;
     }
@@ -960,7 +967,7 @@ class OpenAPI::Model::Path does OpenAPI::Model::Element[
     #| Represents an alternative server array to service all operations in this path.
     has OpenAPI::Model::Server @.servers;
     #| Represents a list of parameters that are applicable for all the operations described under this path. 
-    has OpenAPI::Model::Parameter @.parameters;
+    has RefParameter @.parameters;
 
     # Getters
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
@@ -1047,9 +1054,9 @@ class OpenAPI::Model::Path does OpenAPI::Model::Element[
     multi method remove-server(OpenAPI::Model::Server $server --> Nil) { @!servers .= grep({ not $_ eqv $server}) }
 
     #| Adds given Parameter to parameters array.
-    multi method add-parameter(OpenAPI::Model::Parameter $parameter) { $parameter.set-model($!model); @!parameters.push: $parameter }
+    multi method add-parameter(RefParameter $parameter) { $parameter.set-model($!model); @!parameters.push: $parameter }
     #| Removes given Parameter from parameters array.
-    multi method remove-parameter(OpenAPI::Model::Parameter $parameter --> Nil) { @!parameters .= grep({ not $_ eqv $parameter}) }
+    multi method remove-parameter(RefParameter $parameter --> Nil) { @!parameters .= grep({ not $_ eqv $parameter}) }
 }
 
 #| The OpenAPI::Model::Paths class represents an L<OpenAPI Paths object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathsObject>.
@@ -1125,11 +1132,11 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     #| Represents a short description of the response.
     has Str $.description is required is rw;
     #| Represents a hash that maps a header name to its definition.
-    has OpenAPI::Model::Header %.headers;
+    has RefHeader %.headers;
     #| Represents a hash that maps media types to Media Type objects.
     has OpenAPI::Model::MediaType %.content;
     #| Represents a hash that holds operations links that can be followed from the response.
-    has OpenAPI::Model::Link %.links;
+    has RefLink %.links;
 
     # Getters
     #| Returns a short description of the response or Nil.
@@ -1143,7 +1150,7 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
 
     # Setters
     #| Adds header into response by id.
-    method set-header(Str $id, OpenAPI::Model::Header:D $header --> Nil) { %!headers{$id} = $header }
+    method set-header(Str $id, RefHeader:D $header --> Nil) { %!headers{$id} = $header }
     #| Deletes header from response by id.
     method delete-header(Str $id) { %!headers{$id}:delete }
 
@@ -1153,7 +1160,7 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     method delete-content(Str $id) { %!content{$id}:delete }
 
     #| Adds link into response by id.
-    method set-link(Str $id, OpenAPI::Model::Link:D $link --> Nil) { %!links{$id} = $link }
+    method set-link(Str $id, RefLink:D $link --> Nil) { %!links{$id} = $link }
     #| Deletes link from response by id.
     method delete-link(Str $id) { %!links{$id}:delete }
 }
