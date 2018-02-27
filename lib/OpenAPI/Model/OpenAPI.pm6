@@ -2,6 +2,7 @@ use v6.c;
 
 use OpenAPI::Model::Element;
 use OpenAPI::Model::PatternedObject;
+use OpenAPI::Model::Reference;
 
 class OpenAPI::Model::Callback {...}
 class OpenAPI::Model::Components {...}
@@ -30,6 +31,10 @@ class OpenAPI::Model::SecurityScheme {...}
 class OpenAPI::Model::Server {...}
 class OpenAPI::Model::Tag {...}
 class OpenAPI::Model::Variable {...}
+
+# Subsets with references
+subset RefSchema where OpenAPI::Model::Schema|OpenAPI::Model::Reference;
+subset RefExample where OpenAPI::Model::Example|OpenAPI::Model::Reference;
 
 #| The OpenAPI::Model::Components class represents an L<OpenAPI Components object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#componentsObject>.
 class OpenAPI::Model::Components does OpenAPI::Model::Element[
@@ -462,10 +467,12 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
     },
     object => {
         schema => {
+            ref => True,
             raw => True,
             type => OpenAPI::Model::Schema
         },
         examples => {
+            ref => True,
             hash => True,
             type => OpenAPI::Model::Example
         },
@@ -474,17 +481,17 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
             type => OpenAPI::Model::Encoding
         }
     }] {
-    #| Represents 
+    #| Represents schema defining the type used for the request body.
     has OpenAPI::Model::Schema $.schema;
-    #| Represents 
-    has $.example;
-    #| Represents 
-    has OpenAPI::Model::Example %.examples;
-    #| Represents 
+    #| Represents example of the media type.
+    has RefSchema $.example;
+    #| Represents examples of the media type.
+    has RefExample %.examples;
+    #| Represents a hash that holds Encoding objects of this Media Type.
     has OpenAPI::Model::Encoding %.encoding;
 
     # Getters
-    #| Returns the schema defining the type used for the request body.
+    #| Returns schema defining the type used for the request body.
     method schema()   { $!schema   // Nil }
     #| Returns an example of the media type.
     method example()  { $!example  // Nil }
@@ -1101,6 +1108,7 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     },
     object => {
         headers => {
+            ref => True,
             hash => True,
             type => OpenAPI::Model::Header
         },
@@ -1109,6 +1117,7 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
             type => OpenAPI::Model::MediaType
         },
         links => {
+            ref => True,
             hash => True,
             type => OpenAPI::Model::Link
         }
@@ -1153,7 +1162,7 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
 class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
     scalar => {},
     object => {},
-    :patterned(OpenAPI::Model::Response)] {
+    :patterned([OpenAPI::Model::Response, OpenAPI::Model::Reference])] {
     method serialize() { self.OpenAPI::Model::PatternedObject::serialize() }
 
     #| Adds response to responses by id.

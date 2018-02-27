@@ -1,5 +1,7 @@
 use v6.c;
 
+use OpenAPI::Model::Reference;
+
 class X::OpenAPI::Model::TypeMismatch is Exception {
     has $.name;
     has $.field;
@@ -22,16 +24,16 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
         return $spec<type>.new(|$v) with $spec<raw>;
         if $spec<array> {
             return $v.map({
-                    $_<$ref> ?? OpenAPI::Model::Reference.new($_<$ref>)
+                    $_<$ref> ?? OpenAPI::Model::Reference.new(link => $_<$ref>)
                              !! $spec<type>.deserialize($_, $model)
                 }).Array;
         } elsif $spec<hash> {
             return $v.map({
-                    .key => .value<$ref> ?? OpenAPI::Model::Reference.new(.value<$ref>)
+                    .key => .value<$ref> ?? OpenAPI::Model::Reference.new(link => .value<$ref>)
                                          !! $spec<type>.deserialize(.value, $model)
                 }).Hash;
         } else {
-            return $v<$ref> ?? OpenAPI::Model::Reference.new(ref => $v<$ref>)
+            return $v<$ref> ?? OpenAPI::Model::Reference.new(link => $v<$ref>)
                             !! $spec<type>.deserialize($v, $model);
         }
     }
@@ -48,6 +50,12 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                 return $spec<type>.deserialize($v, $model);
             } elsif $patterned ~~ OpenAPI::Model::Element {
                 return $patterned.deserialize($v, $model);
+            } elsif $patterned ~~ Array {
+                with $v<$ref> {
+                    return $patterned[1].new($v);
+                } else {
+                    return $patterned[0].deserialize($v, $model);
+                }
             } elsif $patterned {
                 return $v;
             }
@@ -102,9 +110,9 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                 $attr.set_value(self, $v);
             } elsif $k (elem) %object.keys {
                 my $spec = %object{$k};
-                my $cond = $spec<array> ?? so $v.map({$_ ~~ $spec<type>}).all !!
-                           $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type>}).all !!
-                           $v ~~ $spec<type>;
+                my $cond = $spec<array> ?? so $v.map({$_ ~~ $spec<type> || ($_ ~~ OpenAPI::Model::Reference && $spec<ref>)}).all !!
+                           $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type> || ($_ ~~ OpenAPI::Model::Reference && $spec<ref>)}).all !!
+                           $v ~~ $spec<type> || ($_ ~~ OpenAPI::Model::Reference && $spec<ref>);
                 if $cond {
                     $attr.set_value(self, $v);
                 } else {
