@@ -38,7 +38,6 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
         schemas => {
             hash => True,
             ref => True,
-            raw => True,
             type => OpenAPI::Model::Schema
         },
         responses => {
@@ -167,9 +166,7 @@ class OpenAPI::Model::Callback does OpenAPI::Model::PatternedObject does OpenAPI
     scalar => {},
     object => {},
     :patterned(OpenAPI::Model::Path)] {
-    submethod TWEAK(*%args) {
-        self!set-fields(%args)
-    }
+    method serialize() { self.OpenAPI::Model::PatternedObject::serialize() }
 
     #| Adds path to callback by id.
     method set-path(Str $id, OpenAPI::Model::Path $path) { %!container{$id} = $path }
@@ -401,7 +398,7 @@ class OpenAPI::Model::License does OpenAPI::Model::Element[
     method url()   { $!url // Nil }
 }
 
-#| The OpenAPI::Model::MediaType class represents an L<OpenAPI Media Type object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#mediaTypeObject>.
+#| The OpenAPI::Model::Link class represents an L<OpenAPI Link object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#linkObject>.
 class OpenAPI::Model::Link does OpenAPI::Model::Element[
     scalar => {
         operationRef => {
@@ -1050,9 +1047,7 @@ class OpenAPI::Model::Paths does OpenAPI::Model::PatternedObject does OpenAPI::M
     scalar => {},
     object => {},
     :patterned(OpenAPI::Model::Path)] {
-    submethod TWEAK(*%args) {
-        self!set-fields(%args)
-    }
+    method serialize() { self.OpenAPI::Model::PatternedObject::serialize() }
 
     #| Adds path to paths by id.
     method set-path(Str $id, OpenAPI::Model::Path $path) { %!container{$id} = $path }
@@ -1156,9 +1151,7 @@ class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAP
     scalar => {},
     object => {},
     :patterned(OpenAPI::Model::Response)] {
-    submethod TWEAK(*%args) {
-        self!set-fields(%args);
-    }
+    method serialize() { self.OpenAPI::Model::PatternedObject::serialize() }
 
     #| Adds response to responses by id.
     method set-response(Str $id, OpenAPI::Model::Response $response) { %!container{$id} = $response }
@@ -1184,9 +1177,7 @@ class OpenAPI::Model::Security does OpenAPI::Model::PatternedObject does OpenAPI
     scalar => {},
     object => {},
     :patterned] {
-    submethod TWEAK(*%args) {
-        self!set-fields(%args)
-    }
+    method serialize() { self.OpenAPI::Model::PatternedObject::serialize() }
 
     #| Adds security rule into security requirements scheme by id.
     method set-security(Str $id, Str @scheme) { %!container{$id} = @scheme }

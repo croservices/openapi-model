@@ -76,10 +76,22 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
     method serialize() {
         my %structure;
         for %scalar.kv -> $k, $v {
-            %structure{$k} = %attr-lookup{%scalar{$k}<attr> // $k}.get_value(self);
+            my $value = %attr-lookup{%scalar{$k}<attr> // $k}.get_value(self);
+            %structure{$k} = $value if $value;
         }
         for %object.kv -> $k, $v {
-            %structure{$k} = %attr-lookup{%object{$k}<attr> // $k}.get_value(self).serialize;
+            my $value = %attr-lookup{%object{$k}<attr> // $k}.get_value(self);
+            given $value {
+                when Array {
+                    %structure{$k} = $value.map(*.serialize) if $value.elems > 0;
+                }
+                when Hash {
+                    %structure{$k} = $value.map({.key => .value.serialize}).Hash if $value.elems > 0;
+                }
+                default {
+                    %structure{$k} = $value.serialize if $value;
+                }
+            }
         }
         %structure;
     }
