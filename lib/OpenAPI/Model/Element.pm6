@@ -19,8 +19,8 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
     method set-model($!model) {}
 
     method !handle-refy($spec, $v, $model) {
+        return $spec<type>.new(|$v) with $spec<raw>;
         if $spec<array> {
-            return $spec<type>.new(|$v) with $spec<raw>;
             return $v.map({
                     $_<$ref> ?? OpenAPI::Model::Reference.new($_<$ref>)
                              !! $spec<type>.deserialize($_, $model)
@@ -71,7 +71,7 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
         my %structure;
         for %scalar.kv -> $k, $v {
             my $value = %attr-lookup{%scalar{$k}<attr> // $k}.get_value(self);
-            %structure{$k} = $value if $value;
+            %structure{$k} = $value if $value.defined && $value !~~ [];
         }
         for %object.kv -> $k, $v {
             my $value = %attr-lookup{%object{$k}<attr> // $k}.get_value(self);
@@ -83,7 +83,7 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                     %structure{$k} = $value.map({.key => .value.serialize}).Hash if $value.elems > 0;
                 }
                 default {
-                    %structure{$k} = $value.serialize if $value;
+                    %structure{$k} = $value.serialize if $value.defined;
                 }
             }
         }

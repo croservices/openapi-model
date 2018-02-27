@@ -1,6 +1,7 @@
 use v6.c;
 use Test;
 use OpenAPI::Model;
+use JSON::Fast;
 
 my $json = q:to/END/;
 {
@@ -228,5 +229,7 @@ END
 my $api;
 
 lives-ok { $api = OpenAPI::Model.from-json($json) }, 'Can parse the document';
+
+is $api.serialize, from-json($json), 'Serialization works';
 
 done-testing;
