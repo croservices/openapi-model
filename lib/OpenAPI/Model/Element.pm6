@@ -110,9 +110,10 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                 $attr.set_value(self, $v);
             } elsif $k (elem) %object.keys {
                 my $spec = %object{$k};
-                my $cond = $spec<array> ?? so $v.map({$_ ~~ $spec<type> || ($_ ~~ OpenAPI::Model::Reference && $spec<ref>)}).all !!
-                           $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type> || ($_ ~~ OpenAPI::Model::Reference && $spec<ref>)}).all !!
-                           $v ~~ $spec<type> || ($_ ~~ OpenAPI::Model::Reference && $spec<ref>);
+                my &ref-cond = -> $_ { $_ ~~ OpenAPI::Model::Reference && $spec<ref> };
+                my $cond = $spec<array> ?? so $v.map({$_ ~~ $spec<type> || &ref-cond($_)}).all !!
+                           $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type> || &ref-cond($_)}).all !!
+                           $v ~~ $spec<type> || &ref-cond($v);
                 if $cond {
                     $attr.set_value(self, $v);
                 } else {
