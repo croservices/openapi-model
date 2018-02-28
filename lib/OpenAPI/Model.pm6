@@ -3,6 +3,10 @@ use JSON::Fast;
 use YAMLish;
 
 class OpenAPI::Model {
+    has $.root;
+    has $.check-references;
+    has %.external;
+
     my package EXPORT::elements {
         constant Callback = OpenAPI::Model::Callback;
         constant Components = OpenAPI::Model::Components;
@@ -33,11 +37,20 @@ class OpenAPI::Model {
         constant Variable = OpenAPI::Model::Variable;
     }
 
+    method !from-source($source, :%external, :$check-references) {
+        my $model = self.new(:%external, :$check-references);
+        my $root = OpenAPI::Model::OpenAPI.deserialize($source, $model);
+        $model!set-root($root);
+    }
+
+    method !set-root($root) { $!root = $root }
+
     method from-yaml($yaml, :%external, :$check-references) {
-        OpenAPI::Model::OpenAPI.deserialize((load-yaml $yaml), self);
+        CATCH {.note}
+        self!from-source((load-yaml $yaml), :%external, :$check-references)
     }
     method from-json($json, :%external, :$check-references) {
         CATCH {.note}
-        OpenAPI::Model::OpenAPI.deserialize((from-json $json), self);
+        self!from-source((from-json $json), :%external, :$check-references)
     }
 }
