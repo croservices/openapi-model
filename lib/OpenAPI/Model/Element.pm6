@@ -115,6 +115,9 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                            $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type> || &ref-cond($_)}).all !!
                            $v ~~ $spec<type> || &ref-cond($v);
                 if $cond {
+                    # TODO investigate return of AUTOGEN instead of method
+                    # my $m = self.^lookup("set-" ~ $normalized-name);
+                    # self.$m($v);
                     $attr.set_value(self, $v);
                 } else {
                     die X::OpenAPI::Model::TypeMismatch.new(

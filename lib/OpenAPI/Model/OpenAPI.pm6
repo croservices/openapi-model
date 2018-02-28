@@ -516,7 +516,7 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
     }
 
     #| Sets example to given value.
-    multi method set-example($!example --> Nil) {
+    method set-example($!example --> Nil) {
         %!examples = Hash.new;
     }
 
