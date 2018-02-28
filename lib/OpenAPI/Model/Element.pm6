@@ -1,6 +1,7 @@
 use v6.c;
 
 use OpenAPI::Model::Reference;
+use JSON::Pointer;
 
 class X::OpenAPI::Model::TypeMismatch is Exception {
     has $.name;
@@ -13,12 +14,37 @@ class X::OpenAPI::Model::TypeMismatch is Exception {
     }
 }
 
+class X::OpenAPI::Model::BadReference is Exception {
+    has $.link;
+
+    method message() {
+        "When resolving reference encountered bad link: $!link"
+    }
+}
+
 role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
     has $.model;
     has %.extensions;
     my %attr-lookup = ::?CLASS.^attributes(:local).map({ .name.substr(2) => $_ });
 
     method set-model($!model) {}
+
+    method !resolve($item) {
+        return $item if $item !~~ OpenAPI::Model::Reference;
+        self!resolve-reference($item);
+    }
+
+    method !resolve-reference(OpenAPI::Model::Reference $ref, :$expect) {
+        given $ref.link {
+            when .starts-with('#') {
+                my $res = JSON::Pointer.parse(.substr(1)).resolve($!model.root);
+                $res ?? $res !! die X::OpenAPI::Model::BadReference.new(link => $_);
+            }
+            default {
+                die "Not yet implemented: $_"
+            }
+        }
+    }
 
     method !handle-refy($spec, $v, $model) {
         return $spec<type>.new(|$v) with $spec<raw>;

@@ -1148,6 +1148,9 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     #| Returns a hash that holds operation links.
     method links()        { %!links      // Nil }
 
+    method get-link(Str $id) { self!resolve-reference(%!links{$id}) }
+    method raw-get-link(Str $id) { %!links{$id} }
+
     # Setters
     #| Adds header into response by id.
     method set-header(Str $id, RefHeader:D $header --> Nil) { %!headers{$id} = $header }

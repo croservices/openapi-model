@@ -2,6 +2,12 @@ use OpenAPI::Model::OpenAPI;
 use JSON::Fast;
 use YAMLish;
 
+class X::OpenAPI::Model::InvalidFormat is Exception {
+    method message() {
+        "Attempt to parse the document failed due to invalid format."
+    }
+}
+
 class OpenAPI::Model {
     has $.root;
     has $.check-references;
@@ -38,19 +44,19 @@ class OpenAPI::Model {
     }
 
     method !from-source($source, :%external, :$check-references) {
+        die X::OpenAPI::Model::InvalidFormat.new if $source ~~ Failure;
         my $model = self.new(:%external, :$check-references);
         my $root = OpenAPI::Model::OpenAPI.deserialize($source, $model);
-        $model!set-root($root);
+        $model!set-root($source);
+        $root;
     }
 
     method !set-root($root) { $!root = $root }
 
-    method from-yaml($yaml, :%external, :$check-references) {
-        CATCH {.note}
-        self!from-source((load-yaml $yaml), :%external, :$check-references)
+    method from-yaml($yaml, :%external, :$check-references = True) {
+        self!from-source((load-yaml $yaml), :%external, :$check-references);
     }
-    method from-json($json, :%external, :$check-references) {
-        CATCH {.note}
-        self!from-source((from-json $json), :%external, :$check-references)
+    method from-json($json, :%external, :$check-references = True) {
+        self!from-source((from-json $json), :%external, :$check-references);
     }
 }
