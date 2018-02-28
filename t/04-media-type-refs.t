@@ -1,6 +1,6 @@
 use v6.c;
 use Test;
-use OpenAPI::Model;
+use OpenAPI::Model :elements;
 use JSON::Fast;
 
 my $json = q:to/END/;
@@ -38,7 +38,7 @@ END
 
 my $api;
 
-lives-ok { $api = OpenAPI::Model::MediaType.deserialize(from-json($json), OpenAPI::Model.new) }, 'Can parse media type with $ref';
+lives-ok { $api = MediaType.deserialize(from-json($json), OpenAPI::Model.new) }, 'Can parse media type with $ref';
 
 is $api.serialize, from-json($json), 'Can serialize $ref';
 
