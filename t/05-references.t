@@ -86,7 +86,6 @@ my $link2 = $api.paths</2.0/repositories/{username}>.get.responses<200>.get-link
 
 my $ref = $api.paths</2.0/repositories/{username}>.get.responses<200>.raw-get-link('userRepository');
 
-todo 'It is yet unknown if we want to resolve hash values', 1;
 ok $link1 !~~ OpenAPI::Model::Reference, 'AT-KEY gives resolved link';
 ok $link2 !~~ OpenAPI::Model::Reference, 'get-link gives resolved link';
 ok $ref    ~~ OpenAPI::Model::Reference, 'raw-get-link gives Reference object';

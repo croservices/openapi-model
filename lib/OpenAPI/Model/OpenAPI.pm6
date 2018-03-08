@@ -117,23 +117,52 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a hash that holds reusable Schema Objects.
-    method schemas()          { %!schemas          // Nil }
+    method schemas() { %!schemas.map({ .key => self!resolve(.value) }).Hash }
+    method raw-schemas() { %!schemas }
     #| Returns a hash that holds reusable Response Objects.
-    method responses()        { %!responses        // Nil }
+    method responses() { %!responses.map({ .key => self!resolve(.value) }).Hash }
+    method raw-responses() { %!responses }
     #| Returns a hash that holds reusable Parameter Objects.
-    method parameters()       { %!parameters       // Nil }
+    method parameters() { %!parameters.map({ .key => self!resolve(.value) }).Hash }
+    method raw-parameters() { %!parameters }
     #| Returns a hash that holds reusable Example Objects.
-    method examples()         { %!examples         // Nil }
+    method examples()  { %!examples.map({ .key => self!resolve(.value) }).Hash }
+    method raw-examples() { %!examples }
     #| Returns a hash that holds reusable Request Body Objects.
-    method request-bodies()   { %!request-bodies   // Nil }
+    method request-bodies() { %!request-bodies.map({ .key => self!resolve(.value) }).Hash }
+    method raw-request-bodies() { %!request-bodies }
     #| Returns a hash that holds reusable Header Objects.
-    method headers()          { %!headers          // Nil }
+    method headers() { %!headers.map({ .key => self!resolve(.value) }).Hash }
+    method raw-headers() { %!headers }
     #| Returns a hash that holds reusable Security Scheme Objects.
-    method security-schemes() { %!security-schemes // Nil }
+    method security-schemes() { %!security-schemes.map({ .key => self!resolve(.value) }).Hash }
+    method raw-security-schemes() { %!security-schemes }
     #| Returns a hash that holds reusable Link Objects.
-    method links()            { %!links            // Nil }
+    method links() { %!links.map({ .key => self!resolve(.value) }).Hash }
+    method raw-links() { %!links }
     #| Returns a hash that holds reusable Callback Objects.
-    method callbacks()        { %!callbacks        // Nil }
+    method callbacks() { %!callbacks.map({ .key => self!resolve(.value) }).Hash }
+    method raw-callbacks() { %!callbacks }
+
+    # Object getters
+    method get-schema(Str $id) { self!resolve(%!schemas{$id}) }
+    method get-raw-schema(Str $id) { %!schemas{$id} }
+    method get-response(Str $id) { self!resolve(%!responses{$id}) }
+    method get-raw-response(Str $id) { %!responses{$id} }
+    method get-parameter(Str $id) { self!resolve(%!parameters{$id}) }
+    method get-raw-parameter(Str $id) { %!parameters{$id} }
+    method get-example(Str $id) { self!resolve(%!examples{$id}) }
+    method get-raw-example(Str $id) { %!examples{$id} }
+    method get-request-body(Str $id) { self!resolve(%!request-bodies{$id}) }
+    method get-raw-request-body(Str $id) { %!request-bodies{$id} }
+    method get-header(Str $id) { self!resolve(%!headers{$id}) }
+    method get-raw-header(Str $id) { %!headers{$id} }
+    method get-security-scheme(Str $id) { self!resolve(%!security-schemes{$id}) }
+    method get-raw-security-scheme(Str $id) { %!security-schemes{$id} }
+    method get-link(Str $id) { self!resolve(%!links{$id}) }
+    method get-raw-link(Str $id) { %!links{$id} }
+    method get-callback(Str $id) { self!resolve(%!callbacks{$id}) }
+    method get-raw-callback(Str $id) { %!callbacks{$id} }
 
     # Setters
     #| Adds schema into components by id.
@@ -205,9 +234,9 @@ class OpenAPI::Model::Contact does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a name of the contact person/organization or Nil.
-    method name()  { $!name  // Nil }
+    method name() { $!name // Nil }
     #| Returns a URL pointing to the contact information or Nil.
-    method url()   { $!url   // Nil }
+    method url() { $!url // Nil }
     #| Returns an email address of the contact person/organization or Nil.
     method email() { $!email // Nil }
 }
@@ -230,7 +259,7 @@ class OpenAPI::Model::Discriminator does OpenAPI::Model::Element[
     #| Returns name of the property in the payload that will hold the discriminator value.
     method property-name() { $!property-name // Nil }
     #| Returns hash that holds schema names or references by payload values.
-    method mapping()       { %!mapping      // Nil }
+    method mapping() { %!mapping }
 }
 
 #| The OpenAPI::Model::Encoding class represents an L<OpenAPI Encoding object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#encodingObject>.
@@ -265,15 +294,20 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
 
     # Getters
     #| Returns content-type for encoding a specific property.
-    method content-type()   { $!content-type // Nil }
+    method content-type() { $!content-type // Nil }
     #| Returns a hash that holds reusable Header Objects.
-    method headers()        { %!headers          // Nil }
+    method headers() { %!headers.map({ .key => self!resolve(.value) }).Hash }
+    method raw-headers() { %!headers }
     #| Returns style of how the parameter is serialized.
-    method style()          { $!style             // Nil }
+    method style() { $!style // Nil }
     #| Returns `explode` flag for serialization logic.
-    method explode()        { $!explode           // Nil }
+    method explode() { $!explode // Nil }
     #| Returns `allowReserved` flag for serialization logic.
-    method allow-reserved() { $!allow-reserved    // Nil }
+    method allow-reserved() { $!allow-reserved // Nil }
+
+    # Object getters
+    method get-header(Str $id) { self!resolve(%!headers{$id}) }
+    method get-raw-header(Str $id) { %!headers{$id} }
 
     # Setters
     #| Adds header into encoding by id.
@@ -304,11 +338,11 @@ class OpenAPI::Model::Example does OpenAPI::Model::Element[
 
     # Getters
     #| Returns short description for the example or Nil.
-    method summary()        { $!summary        // Nil }
+    method summary() { $!summary // Nil }
     #| Returns long description for the example or Nil.
-    method description()    { $!description    // Nil }
+    method description() { $!description // Nil }
     #| Returns embedded liberal example or Nil.
-    method value()          { $!value          // Nil }
+    method value() { $!value // Nil }
     #| Returns URL that points to the literal example or Nil.
     method external-value() { $!external-value // Nil }
 }
@@ -329,7 +363,7 @@ class OpenAPI::Model::ExternalDocs does OpenAPI::Model::Element[
     #| Returns a short description of the target documentation or Nil.
     method description() { $!description // Nil }
     #| Returns a URL for the target documentation or Nil.
-    method url()         { $!url         // Nil }
+    method url() { $!url // Nil }
 }
 
 #| The OpenAPI::Model::Info class represents an L<OpenAPI Info object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#infoObject>.
@@ -365,17 +399,17 @@ class OpenAPI::Model::Info does OpenAPI::Model::Element[
 
     # Getters
     #| Returns an application title or Nil.
-    method title()            { $!title            // Nil }
+    method title() { $!title // Nil }
     #| Returns an application description or Nil.
-    method description()      { $!description      // Nil }
+    method description() { $!description // Nil }
     #| Returns a URL to the Terms of Service for the API or Nil.
     method terms-of-service() { $!terms-of-service // Nil }
     #| Returns a version of the OpenAPI document or Nil.
-    method version()          { $!version          // Nil }
+    method version() { $!version // Nil }
     #| Returns an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#contactObject> or Nil.
-    method contact()          { $!contact          // Nil }
+    method contact() { $!contact // Nil }
     #| Returns an L<OpenAPI License object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#licenseObject> or Nil.
-    method license()          { $!license          // Nil }
+    method license() { $!license // Nil }
 
     # Setters
     #| Sets Contact to Nil.
@@ -406,9 +440,9 @@ class OpenAPI::Model::License does OpenAPI::Model::Element[
 
     # Getters
     #| Returns the license name used for the API or Nil.
-    method name()  { $!name // Nil }
+    method name() { $!name // Nil }
     #| Returns a URL to the license used for the API or Nil.
-    method url()   { $!url // Nil }
+    method url() { $!url // Nil }
 }
 
 #| The OpenAPI::Model::Link class represents an L<OpenAPI Link object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#linkObject>.
@@ -450,7 +484,7 @@ class OpenAPI::Model::Link does OpenAPI::Model::Element[
     #| Returns name of an existing, resolvable OAS operation, as defined with a unique operationId or Nil.
     method operation-id() { $!operation-id // Nil }
     #| Returns a hash that holds parameters to pass or Nil.
-    method parameters() { %!parameters // Nil }
+    method parameters() { %!parameters }
     #| Returns value to use as a request body when calling the target operation or Nil.
     method request-body() { $!request-body // Nil }
     #| Returns description of the link or Nil.
@@ -489,9 +523,9 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
         }
     }] {
     #| Represents schema defining the type used for the request body.
-    has OpenAPI::Model::Schema $.schema;
+    has RefSchema $.schema;
     #| Represents example of the media type.
-    has RefSchema $.example;
+    has $.example;
     #| Represents examples of the media type.
     has RefExample %.examples;
     #| Represents a hash that holds Encoding objects of this Media Type.
@@ -499,13 +533,19 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
 
     # Getters
     #| Returns schema defining the type used for the request body.
-    method schema()   { $!schema   // Nil }
+    method schema() { self!resolve($!schema) // Nil }
+    method raw-schema() { $!schema // Nil }
     #| Returns an example of the media type.
-    method example()  { $!example  // Nil }
+    method example() { $!example // Nil }
     #| Returns examples of the media type.
-    method examples() { %!examples // Nil }
+    method examples() { %!examples.map({ .key => self!resolve(.value) }).Hash }
+    method raw-examples() { %!examples }
     #| Returns a hash that holds Encoding objects of this Media Type.
-    method encoding() { %!encoding // Nil }
+    method encoding() { %!encoding }
+
+    # Object getters
+    method get-example(Str $id) { self!resolve(%!examples{$id}) }
+    method get-raw-example(Str $id) { %!examples{$id} }
 
     # Setters
     #| Sets schema to Nil.
@@ -562,11 +602,11 @@ class OpenAPI::Model::OAuthFlow does OpenAPI::Model::Element[
     #| Returns authorization URL to be used for this flow or Nil.
     method authorization-url() { $!authorization-url // Nil }
     #| Returns token URL to be used for this flow or Nil.
-    method token-url()         { $!token-url         // Nil }
+    method token-url() { $!token-url // Nil }
     #| Returns URL to be used for obtaining refresh tokens or Nil.
-    method refresh-url()       { $!refresh-url       // Nil }
+    method refresh-url() { $!refresh-url // Nil }
     #| Returns a hash that holds available scopes for the OAuth2 security scheme or Nil.
-    method scopes()            { %!scopes            // Nil }
+    method scopes() { %!scopes }
 }
 
 #| The OpenAPI::Model::OAuthFlows class represents an L<OpenAPI OAuthFlows object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oauthFlowsObject>.
@@ -599,9 +639,9 @@ class OpenAPI::Model::OAuthFlows does OpenAPI::Model::Element[
 
     # Getters
     #| Returns configuration for the OAuth Implicit flow or Nil.
-    method implicit()           { $!implicit // Nil };
+    method implicit() { $!implicit // Nil };
     #| Returns configuration for the OAuth Resource Owner Password flow or Nil.
-    method password()           { $!password // Nil };
+    method password() { $!password // Nil };
     #| Returns configuration for the OAuth Client Credentials flow or Nil.
     method client-credentials() { $!client-credentials // Nil };
     #| Returns configuration for the OAuth Authorization Code flow or Nil.
@@ -707,29 +747,36 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a list of tags for API documentation control or Nil.
-    method tags()          { @!tags           // Nil }
+    method tags() { @!tags }
     #| Returns a short summary of what the operation does or Nil.
-    method summary()       { $!summary       // Nil }
+    method summary() { $!summary // Nil }
     #| Returns a verbose explanation of the operation behavior or Nil.
-    method description()   { $!description   // Nil }
+    method description() { $!description // Nil }
     #| Returns a unique string used to identify the operation or Nil.
-    method operation-id()  { $!operation-id  // Nil }
+    method operation-id() { $!operation-id // Nil }
     #| Returns a boolean value that indicates whether operation is deprecated or not or Nil.
-    method deprecated()    { $!deprecated    // Nil }
+    method deprecated() { $!deprecated // Nil }
     #| Returns an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject> or Nil.
     method external-docs() { $!external-docs // Nil }
     #| Returns an Array of L<OpenAPI Parameter objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject> or Nil.
-    method parameters()    { @!parameters    // Nil }
+    method parameters() { @!parameters.map({self!resolve($_)}).List }
+    method raw-parameters() { @!parameters }
     #| Returns an L<OpenAPI Request Body object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#requestBodyObject> or Nil.
-    method request-body()  { $!request-body  // Nil }
+    method request-body() { self!resolve($!request-body) // Nil }
+    method raw-request-body() { $!request-body // Nil }
     #| Returns an L<OpenAPI Responses object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responsesObject> or Nil.
-    method responses()     { $!responses     // Nil }
+    method responses() { $!responses // Nil }
     #| Returns a Hash of L<OpenAPI Callback objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#callbackObject> or Nil.
-    method callbacks()     { %!callbacks     // Nil }
+    method callbacks() { %!callbacks.map({ .key => self!resolve(.value) }).Hash }
+    method raw-callbacks() { %!callbacks }
     #| Returns an Array of L<OpenAPI Security Requirement objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject> or Nil.
-    method security()      { @!security      // Nil }
+    method security() { @!security }
     #| Returns an Array of L<OpenAPI Server objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject> or Nil.
-    method servers()       { @!servers       // Nil }
+    method servers() { @!servers }
+
+    # Object getters
+    method get-callback(Str $id) { self!resolve(%!callbacks{$id}) }
+    method get-raw-callback(Str $id) { %!callbacks{$id} }
 
     # Setters
     #| Sets External Documentation to Nil.
@@ -842,31 +889,37 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
 
     # Getters
     #| Returns name of the parameter.
-    method name()              { $!name              // Nil }
+    method name() { $!name // Nil }
     #| Returns location of the parameter.
-    method in()                { $!in                // Nil }
+    method in() { $!in // Nil }
     #| Returns a brief description of the parameter.
-    method description()       { $!description       // Nil }
+    method description() { $!description // Nil }
     #| Returns whether Parameter is required or not.
-    method required()          { $!required          // Nil }
+    method required() { $!required // Nil }
     #| Returns whether Parameter is deprecated or not.
-    method deprecated()        { $!deprecated        // Nil }
+    method deprecated() { $!deprecated // Nil }
     #| Returns flag to define ability to pass empty-valued parameters.
     method allow-empty-value() { $!allow-empty-value // Nil }
     #| Returns style of how the parameter is serialized.
-    method style()             { $!style             // Nil }
+    method style() { $!style // Nil }
     #| Returns `explode` flag for serialization logic.
-    method explode()           { $!explode           // Nil }
+    method explode() { $!explode // Nil }
     #| Returns `allowReserved` flag for serialization logic.
-    method allow-reserved()    { $!allow-reserved    // Nil }
+    method allow-reserved() { $!allow-reserved // Nil }
     #| Returns schema that defines the type used for the parameter.
-    method schema()            { $!schema            // Nil }
+    method schema() { self!resolve($!schema) // Nil }
+    method raw-schema() { $!schema // Nil }
     #| Returns example of the media type.
-    method example()           { $!example           // Nil }
+    method example() { $!example // Nil }
     #| Returns a hash of examples based on media type.
-    method examples()          { %!examples          // Nil }
+    method examples() { %!examples.map({ .key => self!resolve(.value) }).Hash }
+    method raw-examples() { %!examples }
     #| Returns a hash that holds representations of the parameter.
-    method content()           { %!content           // Nil }
+    method content() { %!content }
+
+    # Object getters
+    method get-example(Str $id) { self!resolve(%!examples{$id}) }
+    method get-raw-example(Str $id) { %!examples{$id} }
 
     # Setters
     #| Sets schema to Nil.
@@ -971,25 +1024,26 @@ class OpenAPI::Model::Path does OpenAPI::Model::Element[
 
     # Getters
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method get()        { $!get        // Nil }
+    method get() { $!get // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method put()        { $!put        // Nil }
+    method put() { $!put // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method post()       { $!post       // Nil }
+    method post() { $!post // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method delete()     { $!delete     // Nil }
+    method delete() { $!delete // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method options()    { $!options    // Nil }
+    method options() { $!options // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method head()       { $!head       // Nil }
+    method head() { $!head // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method patch()      { $!patch      // Nil }
+    method patch() { $!patch // Nil }
     #| Returns an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject> or Nil.
-    method trace()      { $!trace      // Nil }
+    method trace() { $!trace // Nil }
     #| Returns an Array of L<OpenAPI Server objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject> or Nil.
-    method servers()    { @!servers    // Nil }
+    method servers() { @!servers }
     #| Returns an Array of L<OpenAPI Parameter objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject> or Nil.
-    method parameters() { @!parameters // Nil }
+    method parameters() { @!parameters.map({self!resolve($_)}).List }
+    method raw-parameters() { @!parameters }
 
     # Setters
     #| Sets get to Nil.
@@ -1097,9 +1151,9 @@ class OpenAPI::Model::RequestBody does OpenAPI::Model::Element[
     #| Returns a brief description of the request body.
     method description() { $!description // Nil }
     #| Returns the content of the request body.
-    method content()     { %!content     // Nil }
+    method content() { %!content }
     #| Returns a bool that describes if request body is required in the request.
-    method required()    { $!required    // Nil }
+    method required() { $!required // Nil }
 
     # Setters
     #| Adds content into Request Body by id.
@@ -1142,13 +1196,18 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     #| Returns a short description of the response or Nil.
     method description() { $!description // Nil }
     #| Returns a hash that holds headers or Nil.
-    method headers()     { %!headers     // Nil }
+    method headers() { %!headers.map({ .key => self!resolve(.value) }).Hash }
+    method raw-headers() { %!headers }
     #| Returns a hash that holds OpenAPI::Model::MediaType objects of the Response or Nil.
-    method content()     { %!content     // Nil }
+    method content() { %!content }
     #| Returns a hash that holds operation links.
-    method links()        { %!links      // Nil }
+    method links() { %!links.map({ .key => self!resolve(.value) }).Hash }
+    method raw-links() { %!links }
 
-    method get-link(Str $id) { self!resolve-reference(%!links{$id}) }
+    # Object getters
+    method get-header(Str $id) { self!resolve(%!headers{$id}) }
+    method get-raw-header(Str $id) { %!headers{$id} }
+    method get-link(Str $id) { self!resolve(%!links{$id}) }
     method raw-get-link(Str $id) { %!links{$id} }
 
     # Setters
@@ -1180,7 +1239,8 @@ class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAP
     #| Deletes response from responses by id.
     method delete-response(Str $id) { %!container{$id}:delete }
     #| Returns OpenAPI::Model::Response object by id.
-    method get-response(Str $id) { %!container{$id} }
+    method get-response(Str $id) { self!resolve(%!container{$id}) }
+    method get-raw-response(Str $id) { %!container{$id} }
 }
 
 #| The OpenAPI::Model::Schema class represents an L<OpenAPI Schema object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject>.
@@ -1252,19 +1312,19 @@ class OpenAPI::Model::SecurityScheme does OpenAPI::Model::Element[
 
     # Getters
     #| Returns type of the security scheme or Nil.
-    method type()                { $!type                // Nil }
+    method type() { $!type // Nil }
     #| Returns a short description for security scheme or Nil.
-    method description()         { $!description         // Nil }
+    method description() { $!description // Nil }
     #| Returns name of the header, query or cookie parameter to be used or Nil.
-    method name()                { $!name                // Nil }
+    method name() { $!name // Nil }
     #| Returns location of the API key or Nil.
-    method in()                  { $!in                  // Nil }
+    method in() { $!in // Nil }
     #| Returns name of the HTTP Authorization scheme or Nil.
-    method scheme()              { $!scheme              // Nil }
+    method scheme() { $!scheme // Nil }
     #| Returns hint to the client to identify how the bearer token is formatted or Nil.
-    method bearer-format()       { $!bearer-format       // Nil }
+    method bearer-format() { $!bearer-format // Nil }
     #| Returns an object containing configuration information for the flow types supported or Nil.
-    method flows()               { $!flows               // Nil }
+    method flows() { $!flows // Nil }
     #| Returns OpenId Connect URL to discover OAuth2 configuration values or Nil.
     method open-id-connect-url() { $!open-id-connect-url // Nil }
 
@@ -1298,11 +1358,11 @@ class OpenAPI::Model::Server does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a server url or Nil.
-    method url()         { $!url         // Nil }
+    method url() { $!url // Nil }
     #| Returns a server description or Nil.
     method description() { $!description // Nil }
     #| Returns a server variables or Nil.
-    method variables()   { %!variables   // Nil }
+    method variables() { %!variables }
 
     # Setters
     #| Adds variable for the server by id.
@@ -1336,9 +1396,9 @@ class OpenAPI::Model::Tag does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a name of the tag.
-    method name()          { $!name          // Nil }
+    method name() { $!name // Nil }
     #| Returns a short description for for the tag.
-    method description()   { $!description   // Nil }
+    method description() { $!description // Nil }
     #| Returns additional external documentation.
     method external-docs() { $!external-docs // Nil }
 
@@ -1367,9 +1427,9 @@ class OpenAPI::Model::Variable does OpenAPI::Model::Element[
 
     # Getters
     #| Returns  an enumeration of string values to be used if the substitution options are from a limited set or Nil.
-    method enum()        { @!enum        // Nil }
+    method enum() { @!enum }
     #| Returns the default value to use for substitution, and to send, if an alternate value is not supplied or Nil.
-    method default()     { $!default     // Nil }
+    method default() { $!default // Nil }
     #| Returns an optional description for the server variable or Nil.
     method description() { $!description // Nil }
 }
@@ -1425,17 +1485,17 @@ class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
 
     # Getters
     #| Returns an L<OpenAPI Info object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#infoObject> or Nil.
-    method info()          { $!info          // Nil }
+    method info() { $!info // Nil }
     #| Returns an Array of L<OpenAPI Server objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject> or Nil.
-    method servers()       { @!servers       // Nil }
+    method servers() { @!servers }
     #| Returns an L<OpenAPI Paths object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathsObject> or Nil.
-    method paths()         { $!paths         // Nil }
+    method paths() { $!paths // Nil }
     #| Returns an L<OpenAPI Components object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#componentsObject> or Nil.
-    method components()    { $!components    // Nil }
+    method components() { $!components // Nil }
     #| Returns an Array of L<OpenAPI Security Requirement objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject> or Nil.
-    method security()      { @!security      // Nil }
+    method security() { @!security }
     #| Returns an Array of L<OpenAPI Tag objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#tagObject> or Nil.
-    method tags()          { @!tags          // Nil }
+    method tags() { @!tags }
     #| Returns an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject> or Nil.
     method external-docs() { $!external-docs // Nil }
 
