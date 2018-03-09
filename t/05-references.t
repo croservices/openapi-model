@@ -118,9 +118,11 @@ lives-ok { $api = OpenAPI::Model.from-json($json-doc) }, 'Can parse bad schema';
 
 is $api.serialize, from-json($json-doc), 'Serialization works';
 
-dies-ok { $api.paths</2.0/repositories/{username}>.get.responses<200>.links<doesntExist1> }, 'Dies on attempt to resolve incorrect reference';
+dies-ok { $api.paths</2.0/repositories/{username}>.get.responses<200>.links<doesntExist1> },
+  'Dies on attempt to resolve incorrect reference';
 
-dies-ok { $api.paths</2.0/repositories/{username}>.get.responses<200>.links<doesntExist2> }, 'Dies on attempt to resolve incorrect reference on hash';
+dies-ok { $api.paths</2.0/repositories/{username}>.get.responses<200>.links<doesntExist2> },
+  'Dies on attempt to resolve incorrect reference on hash';
 
 $json-doc = $json-doc-begin ~ q:to/MIDDLE/
                             "external": {
