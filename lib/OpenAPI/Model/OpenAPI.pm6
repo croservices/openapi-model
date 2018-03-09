@@ -1244,16 +1244,11 @@ class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAP
 }
 
 #| The OpenAPI::Model::Schema class represents an L<OpenAPI Schema object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject>.
-class OpenAPI::Model::Schema does OpenAPI::Model::Element[
+class OpenAPI::Model::Schema does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
     scalar => {},
     object => {}] {
-    has %.schema;
 
-    submethod BUILD(*%args) {
-        %!schema = %args;
-    }
-
-    method serialize() { %!schema }
+    method serialize() { %!container }
 }
 
 #| The OpenAPI::Model::Security class represents an L<OpenAPI Security Requirement object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject>.

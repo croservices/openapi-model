@@ -48,6 +48,7 @@ class OpenAPI::Model {
         my $model = self.new(:%external, :$check-references);
         my $root = OpenAPI::Model::OpenAPI.deserialize($source, $model);
         $model!set-root($root);
+        $root.reference-check() if $check-references;
         $root;
     }
 

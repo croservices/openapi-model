@@ -77,7 +77,7 @@ END
 
 my $api;
 
-lives-ok { $api = OpenAPI::Model.from-json($json-doc) }, 'Can parse the document';
+lives-ok { $api = OpenAPI::Model.from-json($json-doc, :!check-references) }, 'Can parse the document';
 
 is $api.openapi, '3.0.0', 'openapi version is correct';
 

@@ -69,6 +69,9 @@ my $json-doc-end = q:to/END/;
                         "$ref": "#/components/schemas/user"
                     }
                 }
+            },
+            "user": {
+                "type": "user"
             }
         }
     }
@@ -84,7 +87,7 @@ my $json-doc = $json-doc-begin ~ q:to/MIDDLE/
 MIDDLE
 ~ $json-doc-end;
 
-lives-ok { $api = OpenAPI::Model.from-json($json-doc) }, 'Can parse the document';
+$api = OpenAPI::Model.from-json($json-doc, :!check-references);
 
 is $api.serialize, from-json($json-doc), 'Serialization works';
 
@@ -114,7 +117,7 @@ MIDDLE
 ~ $json-doc-end;
 
 
-lives-ok { $api = OpenAPI::Model.from-json($json-doc) }, 'Can parse bad schema';
+lives-ok { $api = OpenAPI::Model.from-json($json-doc, :!check-references) }, 'Can parse bad schema when check is disabled';
 
 is $api.serialize, from-json($json-doc), 'Serialization works';
 
@@ -131,15 +134,15 @@ $json-doc = $json-doc-begin ~ q:to/MIDDLE/
 MIDDLE
 ~ $json-doc-end;
 
-lives-ok { $api = OpenAPI::Model.from-json($json-doc) }, 'Can parse schema with external refs';
+lives-ok { $api = OpenAPI::Model.from-json($json-doc, :!check-references) }, 'Can parse schema with external refs';
 
 dies-ok { $api.paths</2.0/repositories/{username}>.get.responses<200>.links<external> },
   'Dies on attempt to resolve external link without matching model';
 
 my $external-json-doc = $json-doc-begin ~ $json-doc-end;
-my $external-api = OpenAPI::Model.from-json($external-json-doc);
+my $external-api = OpenAPI::Model.from-json($external-json-doc, :!check-references);
 
-lives-ok { $api = OpenAPI::Model.from-json($json-doc, external => {'external.json' => $external-api}) },
+lives-ok { $api = OpenAPI::Model.from-json($json-doc, external => {'external.json' => $external-api}, :!check-references)  },
   'Can parse schema with external refs';
 
 my $ext-link = $api.paths</2.0/repositories/{username}>.get.responses<200>.links<external>;

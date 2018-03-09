@@ -30,6 +30,44 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
 
     method set-model($!model) {}
 
+    method reference-check() {
+        my sub check-schema($item) {
+            for $item.kv -> $k, $v {
+                if $k eqv '$ref' {
+                    self!resolve-reference(OpenAPI::Model::Reference.new(link => $v));
+                }
+                check-schema($v) if $v ~~ Associative|Positional;
+            }
+        }
+
+        for %object.kv -> $k, $v {
+            my $value = %attr-lookup{%object{$k}<attr> // $k}.get_value(self);
+            given $value {
+                when OpenAPI::Model::Reference {
+                    self!resolve-reference($_);
+                }
+                when .^name.ends-with('Schema') {
+                    check-schema(.container);
+                }
+                when OpenAPI::Model::PatternedObject {
+                    .container.values.map({.reference-check});
+                }
+                when Positional {
+                    .map({ .reference-check });
+                }
+                when Associative {
+                    .values.map({.reference-check});
+                }
+                when OpenAPI::Model::Element {
+                    .reference-check;
+                }
+            }
+            CATCH {
+                when X::AdHoc { next }
+            }
+        }
+    }
+
     method !resolve($item, :$expect) {
         return $item if $item !~~ OpenAPI::Model::Reference;
         self!resolve-reference($item, :$expect);
@@ -171,7 +209,8 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
             } elsif $k (elem) %object.keys {
                 my $spec = %object{$k};
                 my &ref-cond = -> $_ { $_ ~~ OpenAPI::Model::Reference && $spec<ref> };
-                my $cond = $spec<array> ?? so $v.map({$_ ~~ $spec<type> || &ref-cond($_)}).all !!
+                my $cond = $spec<raw> ?? True !!
+                           $spec<array> ?? so $v.map({$_ ~~ $spec<type> || &ref-cond($_)}).all !!
                            $spec<hash>  ?? so $v.values.map({$_ ~~ $spec<type> || &ref-cond($_)}).all !!
                            $v ~~ $spec<type> || &ref-cond($v);
                 if $cond {
