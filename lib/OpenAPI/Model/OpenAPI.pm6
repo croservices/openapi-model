@@ -117,51 +117,51 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
 
     # Getters
     #| Returns a hash that holds reusable Schema Objects.
-    method schemas() { %!schemas.map({ .key => self!resolve(.value) }).Hash }
+    method schemas() { %!schemas.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Schema) }).Hash }
     method raw-schemas() { %!schemas }
     #| Returns a hash that holds reusable Response Objects.
-    method responses() { %!responses.map({ .key => self!resolve(.value) }).Hash }
+    method responses() { %!responses.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Response) }).Hash }
     method raw-responses() { %!responses }
     #| Returns a hash that holds reusable Parameter Objects.
-    method parameters() { %!parameters.map({ .key => self!resolve(.value) }).Hash }
+    method parameters() { %!parameters.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Parameter) }).Hash }
     method raw-parameters() { %!parameters }
     #| Returns a hash that holds reusable Example Objects.
-    method examples()  { %!examples.map({ .key => self!resolve(.value) }).Hash }
+    method examples()  { %!examples.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Example) }).Hash }
     method raw-examples() { %!examples }
     #| Returns a hash that holds reusable Request Body Objects.
-    method request-bodies() { %!request-bodies.map({ .key => self!resolve(.value) }).Hash }
+    method request-bodies() { %!request-bodies.map({ .key => self!resolve(.valueSchema, expect => OpenAPI::Model::RequestBody) }).Hash }
     method raw-request-bodies() { %!request-bodies }
     #| Returns a hash that holds reusable Header Objects.
-    method headers() { %!headers.map({ .key => self!resolve(.value) }).Hash }
+    method headers() { %!headers.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Header) }).Hash }
     method raw-headers() { %!headers }
     #| Returns a hash that holds reusable Security Scheme Objects.
-    method security-schemes() { %!security-schemes.map({ .key => self!resolve(.value) }).Hash }
+    method security-schemes() { %!security-schemes.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Security) }).Hash }
     method raw-security-schemes() { %!security-schemes }
     #| Returns a hash that holds reusable Link Objects.
-    method links() { %!links.map({ .key => self!resolve(.value) }).Hash }
+    method links() { %!links.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Link) }).Hash }
     method raw-links() { %!links }
     #| Returns a hash that holds reusable Callback Objects.
-    method callbacks() { %!callbacks.map({ .key => self!resolve(.value) }).Hash }
+    method callbacks() { %!callbacks.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Callback) }).Hash }
     method raw-callbacks() { %!callbacks }
 
     # Object getters
-    method get-schema(Str $id) { self!resolve(%!schemas{$id}) }
+    method get-schema(Str $id) { self!resolve(%!schemas{$id}, expect => OpenAPI::Model::Schema) }
     method get-raw-schema(Str $id) { %!schemas{$id} }
-    method get-response(Str $id) { self!resolve(%!responses{$id}) }
+    method get-response(Str $id) { self!resolve(%!responses{$id}, expect => OpenAPI::Model::Response) }
     method get-raw-response(Str $id) { %!responses{$id} }
-    method get-parameter(Str $id) { self!resolve(%!parameters{$id}) }
+    method get-parameter(Str $id) { self!resolve(%!parameters{$id}, expect => OpenAPI::Model::Parameter) }
     method get-raw-parameter(Str $id) { %!parameters{$id} }
-    method get-example(Str $id) { self!resolve(%!examples{$id}) }
+    method get-example(Str $id) { self!resolve(%!examples{$id}, expect => OpenAPI::Model::Example) }
     method get-raw-example(Str $id) { %!examples{$id} }
-    method get-request-body(Str $id) { self!resolve(%!request-bodies{$id}) }
+    method get-request-body(Str $id) { self!resolve(%!request-bodies{$id}, expect => OpenAPI::Model::RequestBody) }
     method get-raw-request-body(Str $id) { %!request-bodies{$id} }
-    method get-header(Str $id) { self!resolve(%!headers{$id}) }
+    method get-header(Str $id) { self!resolve(%!headers{$id}, expect => OpenAPI::Model::Header) }
     method get-raw-header(Str $id) { %!headers{$id} }
-    method get-security-scheme(Str $id) { self!resolve(%!security-schemes{$id}) }
+    method get-security-scheme(Str $id) { self!resolve(%!security-schemes{$id}, expect => OpenAPI::Model::Security) }
     method get-raw-security-scheme(Str $id) { %!security-schemes{$id} }
-    method get-link(Str $id) { self!resolve(%!links{$id}) }
+    method get-link(Str $id) { self!resolve(%!links{$id}, expect => OpenAPI::Model::Link) }
     method get-raw-link(Str $id) { %!links{$id} }
-    method get-callback(Str $id) { self!resolve(%!callbacks{$id}) }
+    method get-callback(Str $id) { self!resolve(%!callbacks{$id}), expect => OpenAPI::Model::Callback }
     method get-raw-callback(Str $id) { %!callbacks{$id} }
 
     # Setters
@@ -296,7 +296,7 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     #| Returns content-type for encoding a specific property.
     method content-type() { $!content-type // Nil }
     #| Returns a hash that holds reusable Header Objects.
-    method headers() { %!headers.map({ .key => self!resolve(.value) }).Hash }
+    method headers() { %!headers.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Header) }).Hash }
     method raw-headers() { %!headers }
     #| Returns style of how the parameter is serialized.
     method style() { $!style // Nil }
@@ -306,7 +306,7 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     method allow-reserved() { $!allow-reserved // Nil }
 
     # Object getters
-    method get-header(Str $id) { self!resolve(%!headers{$id}) }
+    method get-header(Str $id) { self!resolve(%!headers{$id}, expect => OpenAPI::Model::Header) }
     method get-raw-header(Str $id) { %!headers{$id} }
 
     # Setters
@@ -533,18 +533,18 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
 
     # Getters
     #| Returns schema defining the type used for the request body.
-    method schema() { self!resolve($!schema) // Nil }
+    method schema() { self!resolve($!schema, expect => OpenAPI::Model::Schema) // Nil }
     method raw-schema() { $!schema // Nil }
     #| Returns an example of the media type.
     method example() { $!example // Nil }
     #| Returns examples of the media type.
-    method examples() { %!examples.map({ .key => self!resolve(.value) }).Hash }
+    method examples() { %!examples.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Example) }).Hash }
     method raw-examples() { %!examples }
     #| Returns a hash that holds Encoding objects of this Media Type.
     method encoding() { %!encoding }
 
     # Object getters
-    method get-example(Str $id) { self!resolve(%!examples{$id}) }
+    method get-example(Str $id) { self!resolve(%!examples{$id}, expect => OpenAPI::Model::Example) }
     method get-raw-example(Str $id) { %!examples{$id} }
 
     # Setters
@@ -759,15 +759,15 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
     #| Returns an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject> or Nil.
     method external-docs() { $!external-docs // Nil }
     #| Returns an Array of L<OpenAPI Parameter objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject> or Nil.
-    method parameters() { @!parameters.map({self!resolve($_)}).List }
+    method parameters() { @!parameters.map({self!resolve($_, expect => OpenAPI::Model::Parameter)}).List }
     method raw-parameters() { @!parameters }
     #| Returns an L<OpenAPI Request Body object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#requestBodyObject> or Nil.
-    method request-body() { self!resolve($!request-body) // Nil }
+    method request-body() { self!resolve($!request-body, expect => OpenAPI::Model::RequestBody) // Nil }
     method raw-request-body() { $!request-body // Nil }
     #| Returns an L<OpenAPI Responses object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responsesObject> or Nil.
     method responses() { $!responses // Nil }
     #| Returns a Hash of L<OpenAPI Callback objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#callbackObject> or Nil.
-    method callbacks() { %!callbacks.map({ .key => self!resolve(.value) }).Hash }
+    method callbacks() { %!callbacks.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Callback) }).Hash }
     method raw-callbacks() { %!callbacks }
     #| Returns an Array of L<OpenAPI Security Requirement objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject> or Nil.
     method security() { @!security }
@@ -775,7 +775,7 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
     method servers() { @!servers }
 
     # Object getters
-    method get-callback(Str $id) { self!resolve(%!callbacks{$id}) }
+    method get-callback(Str $id) { self!resolve(%!callbacks{$id}, expect => OpenAPI::Model::Callback) }
     method get-raw-callback(Str $id) { %!callbacks{$id} }
 
     # Setters
@@ -907,18 +907,18 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     #| Returns `allowReserved` flag for serialization logic.
     method allow-reserved() { $!allow-reserved // Nil }
     #| Returns schema that defines the type used for the parameter.
-    method schema() { self!resolve($!schema) // Nil }
+    method schema() { self!resolve($!schema, expect => OpenAPI::Model::Schema) // Nil }
     method raw-schema() { $!schema // Nil }
     #| Returns example of the media type.
     method example() { $!example // Nil }
     #| Returns a hash of examples based on media type.
-    method examples() { %!examples.map({ .key => self!resolve(.value) }).Hash }
+    method examples() { %!examples.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Examples) }).Hash }
     method raw-examples() { %!examples }
     #| Returns a hash that holds representations of the parameter.
     method content() { %!content }
 
     # Object getters
-    method get-example(Str $id) { self!resolve(%!examples{$id}) }
+    method get-example(Str $id) { self!resolve(%!examples{$id}, expect => OpenAPI::Model::Example) }
     method get-raw-example(Str $id) { %!examples{$id} }
 
     # Setters
@@ -1042,7 +1042,7 @@ class OpenAPI::Model::Path does OpenAPI::Model::Element[
     #| Returns an Array of L<OpenAPI Server objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject> or Nil.
     method servers() { @!servers }
     #| Returns an Array of L<OpenAPI Parameter objects|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject> or Nil.
-    method parameters() { @!parameters.map({self!resolve($_)}).List }
+    method parameters() { @!parameters.map({self!resolve($_, expect => OpenAPI::Model::Parameter)}).List }
     method raw-parameters() { @!parameters }
 
     # Setters
@@ -1196,18 +1196,18 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     #| Returns a short description of the response or Nil.
     method description() { $!description // Nil }
     #| Returns a hash that holds headers or Nil.
-    method headers() { %!headers.map({ .key => self!resolve(.value) }).Hash }
+    method headers() { %!headers.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Header) }).Hash }
     method raw-headers() { %!headers }
     #| Returns a hash that holds OpenAPI::Model::MediaType objects of the Response or Nil.
     method content() { %!content }
     #| Returns a hash that holds operation links.
-    method links() { %!links.map({ .key => self!resolve(.value) }).Hash }
+    method links() { %!links.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Link) }).Hash }
     method raw-links() { %!links }
 
     # Object getters
-    method get-header(Str $id) { self!resolve(%!headers{$id}) }
+    method get-header(Str $id) { self!resolve(%!headers{$id}, expect => OpenAPI::Model::Header) }
     method get-raw-header(Str $id) { %!headers{$id} }
-    method get-link(Str $id) { self!resolve(%!links{$id}) }
+    method get-link(Str $id) { self!resolve(%!links{$id}, expect => OpenAPI::Model::Link) }
     method raw-get-link(Str $id) { %!links{$id} }
 
     # Setters
@@ -1239,7 +1239,7 @@ class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAP
     #| Deletes response from responses by id.
     method delete-response(Str $id) { %!container{$id}:delete }
     #| Returns OpenAPI::Model::Response object by id.
-    method get-response(Str $id) { self!resolve(%!container{$id}) }
+    method get-response(Str $id) { self!resolve(%!container{$id}, expect => OpenAPI::Model::Response) }
     method get-raw-response(Str $id) { %!container{$id} }
 }
 

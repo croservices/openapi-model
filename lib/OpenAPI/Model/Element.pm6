@@ -1,6 +1,7 @@
 use v6.c;
 
 use OpenAPI::Model::Reference;
+use OpenAPI::Model::PatternedObject;
 use JSON::Pointer;
 
 class X::OpenAPI::Model::TypeMismatch is Exception {
@@ -29,16 +30,49 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
 
     method set-model($!model) {}
 
-    method !resolve($item) {
+    method !resolve($item, :$expect) {
         return $item if $item !~~ OpenAPI::Model::Reference;
-        self!resolve-reference($item);
+        self!resolve-reference($item, :$expect);
     }
 
     method !resolve-reference(OpenAPI::Model::Reference $ref, :$expect) {
         given $ref.link {
             when .starts-with('#') {
-                my $res = JSON::Pointer.parse(.substr(1)).resolve($!model.root);
-                $res ?? $res !! die X::OpenAPI::Model::BadReference.new(link => $_);
+                my @tokens = JSON::Pointer.parse(.substr(1)).tokens;
+                my $root;
+                if (self.^name.ends-with('OpenAPI')) {
+                    $root = self;
+                } else {
+                    $root = $!model.root;
+                }
+                for @tokens -> $token {
+                    my $t = $token.trans(['A'..'Z'] => [('a'..'z').map({'-' ~ $_})]);
+                    $t .= substr(1) if $t.starts-with('-');
+                    my $method = $root.^lookup($t);
+                    if $method.defined {
+                        $root = $root.$method;
+                    } else {
+                        if $root ~~ Associative {
+                            with $root{$token} {
+                                $root = $root{$token};
+                            } else {
+                                die X::OpenAPI::Model::BadReference.new(link => $ref.link);
+                            }
+                        } else {
+                            die X::OpenAPI::Model::BadReference.new(link => $ref.link) unless $method.defined;
+                        }
+                    }
+                }
+                return $root if $root ~~ $expect;
+                die X::OpenAPI::Model::BadReference.new(link => $ref.link);
+            }
+            when .split('#').elems == 2 {
+                my ($ext, $rel) = .split('#');
+                with $!model.external{$ext} {
+                    return $_!resolve-reference(OpenAPI::Model::Reference.new(link => "#$rel"), :$expect);
+                } else {
+                    die X::OpenAPI::Model::BadReference.new(link => $ref.link);
+                }
             }
             default {
                 die "Not yet implemented: $_"

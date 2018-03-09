@@ -47,7 +47,7 @@ class OpenAPI::Model {
         die X::OpenAPI::Model::InvalidFormat.new if $source ~~ Failure;
         my $model = self.new(:%external, :$check-references);
         my $root = OpenAPI::Model::OpenAPI.deserialize($source, $model);
-        $model!set-root($source);
+        $model!set-root($root);
         $root;
     }
 
