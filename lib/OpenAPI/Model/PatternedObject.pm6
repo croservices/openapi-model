@@ -7,7 +7,13 @@ role OpenAPI::Model::PatternedObject does Associative {
         %!container = %args;
     }
 
-    method kv()             { %!container.map({.key => self!resolve(.value)}).kv }
+    method kv()             { %!container.map({ slip .key, self!resolve(.value)}) }
+    method pairs()          { gather {
+                                    for %!container.kv -> $k, $v {
+                                        take $k => self!resolve($v);
+                                    }
+                                }
+                            }
     method keys()           { %!container.keys }
     method values()         { %!container.values.map({self!resolve($_)}) }
     method AT-KEY($key)     { self!resolve(%!container.AT-KEY($key)) }
