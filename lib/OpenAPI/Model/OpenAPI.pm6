@@ -533,7 +533,7 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
 
     # Getters
     #| Returns schema defining the type used for the request body.
-    method schema() { self!resolve($!schema, expect => OpenAPI::Model::Schema) // Nil }
+    method schema() { self!resolve-schema($!schema.container) // Nil }
     method raw-schema() { $!schema // Nil }
     #| Returns an example of the media type.
     method example() { $!example // Nil }
@@ -907,7 +907,7 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     #| Returns `allowReserved` flag for serialization logic.
     method allow-reserved() { $!allow-reserved // Nil }
     #| Returns schema that defines the type used for the parameter.
-    method schema() { self!resolve($!schema, expect => OpenAPI::Model::Schema) // Nil }
+    method schema() { self!resolve-schema($!schema.container) // Nil }
     method raw-schema() { $!schema // Nil }
     #| Returns example of the media type.
     method example() { $!example // Nil }

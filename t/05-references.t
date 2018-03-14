@@ -149,4 +149,7 @@ my $ext-link = $api.paths</2.0/repositories/{username}>.get.responses<200>.links
 ok $ext-link ~~ OpenAPI::Model::Link, 'Link is resolved';
 is $ext-link.operation-id, 'getRepository', 'Link is correct';
 
+is $api.paths</2.0/repositories/{username}>.get.responses<200>.content<application/json>.schema<type>, 'array', 'Resolved first level';
+is $api.paths</2.0/repositories/{username}>.get.responses<200>.content<application/json>.schema<items><properties><owner><type>, 'user', 'Resolved third level';
+
 done-testing;

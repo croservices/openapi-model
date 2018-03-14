@@ -30,16 +30,23 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
 
     method set-model($!model) {}
 
-    method reference-check() {
-        my sub check-schema($item) {
-            for $item.kv -> $k, $v {
-                if $k eqv '$ref' {
-                    self!resolve-reference(OpenAPI::Model::Reference.new(link => $v));
+    method !resolve-schema($item) {
+        return $item if $item !~~ Associative;
+        $item.map(
+            {
+                if .key eqv '$ref' {
+                    my $middle = self!resolve-reference(OpenAPI::Model::Reference.new(link => .value));
+                    self!resolve-schema($middle);
+                } elsif .value ~~ Associative|Positional {
+                    .key => self!resolve-schema(.value);
+                } else {
+                    .key => .value;
                 }
-                check-schema($v) if $v ~~ Associative|Positional;
             }
-        }
+        ).Hash;
+    }
 
+    method reference-check() {
         for %object.kv -> $k, $v {
             my $value = %attr-lookup{%object{$k}<attr> // $k}.get_value(self);
             given $value {
@@ -47,7 +54,7 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                     self!resolve-reference($_);
                 }
                 when .^name.ends-with('Schema') {
-                    check-schema(.container);
+                    self!resolve-schema(.container);
                 }
                 when OpenAPI::Model::PatternedObject {
                     .container.values.map({.reference-check});

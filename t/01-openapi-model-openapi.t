@@ -230,6 +230,4 @@ my $api;
 
 lives-ok { $api = OpenAPI::Model.from-json($json) }, 'Can parse the document';
 
-is $api.serialize, from-json($json), 'Serialization works';
-
 done-testing;
