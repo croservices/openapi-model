@@ -129,7 +129,7 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
     method examples()  { %!examples.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Example) }).Hash }
     method raw-examples() { %!examples }
     #| Returns a hash that holds reusable Request Body Objects.
-    method request-bodies() { %!request-bodies.map({ .key => self!resolve(.valueSchema, expect => OpenAPI::Model::RequestBody) }).Hash }
+    method request-bodies() { %!request-bodies.map({ .key => self!resolve(.value, expect => OpenAPI::Model::RequestBody) }).Hash }
     method raw-request-bodies() { %!request-bodies }
     #| Returns a hash that holds reusable Header Objects.
     method headers() { %!headers.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Header) }).Hash }
