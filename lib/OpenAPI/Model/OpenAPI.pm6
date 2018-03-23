@@ -43,6 +43,12 @@ subset RefSecurityScheme where OpenAPI::Model::SecurityScheme|OpenAPI::Model::Re
 subset RefLink where OpenAPI::Model::Link|OpenAPI::Model::Reference;
 subset RefCallback where OpenAPI::Model::Callback|OpenAPI::Model::Reference;
 
+class X::OpenAPI::Model::InvalidFormat is Exception {
+    method message() {
+        "Attempt to parse the document failed due to invalid format."
+    }
+}
+
 #| The OpenAPI::Model::Components class represents an L<OpenAPI Components object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#componentsObject>.
 class OpenAPI::Model::Components does OpenAPI::Model::Element[
     scalar => {},
@@ -1292,18 +1298,43 @@ class OpenAPI::Model::SecurityScheme does OpenAPI::Model::Element[
     #| Represents a short description for security scheme.
     has Str $.description is rw;
     #| Represents name of the header, query or cookie parameter to be used.
-    has Str $.name is required is rw;
+    has Str $.name is rw;
     #| Represents location of the API key.
     subset In of Str where 'query'|'header'|'cookie';
-    has In $.in is required is rw;
+    has In $.in is rw;
     #| Represents name of the HTTP Authorization scheme.
-    has Str $.scheme is required is rw;
+    has Str $.scheme is rw;
     #| Represents hint to the client to identify how the bearer token is formatted.
     has Str $.bearer-format is rw;
     #| Represents an object containing configuration information for the flow types supported.
     has OpenAPI::Model::OAuthFlows $.flows;
     #| Represents OpenId Connect URL to discover OAuth2 configuration values.
-    has Str $.open-id-connect-url is required is rw;
+    has Str $.open-id-connect-url is rw;
+
+    submethod TWEAK(*%args) {
+        given %args<type> {
+            when 'apiKey' {
+                unless %args<name>.defined && %args<in>.defined {
+                    die X::OpenAPI::Model::InvalidFormat.new;
+                }
+            }
+            when 'http' {
+                unless %args<scheme>.defined {
+                    die X::OpenAPI::Model::InvalidFormat.new;
+                }
+            }
+            when 'oauth2' {
+                unless %args<flows>.defined {
+                    die X::OpenAPI::Model::InvalidFormat.new;
+                }
+            }
+            when 'openIdConnect' {
+                unless %args<openIdConnect>.defined {
+                    die X::OpenAPI::Model::InvalidFormat.new;
+                }
+            }
+        }
+    }
 
     # Getters
     #| Returns type of the security scheme or Nil.

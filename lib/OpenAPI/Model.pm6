@@ -2,12 +2,6 @@ use OpenAPI::Model::OpenAPI;
 use JSON::Fast;
 use YAMLish;
 
-class X::OpenAPI::Model::InvalidFormat is Exception {
-    method message() {
-        "Attempt to parse the document failed due to invalid format."
-    }
-}
-
 class OpenAPI::Model {
     has $.root;
     has $.check-references;
