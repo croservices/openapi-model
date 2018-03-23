@@ -141,7 +141,7 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
     method headers() { %!headers.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Header) }).Hash }
     method raw-headers() { %!headers }
     #| Returns a hash that holds reusable Security Scheme Objects.
-    method security-schemes() { %!security-schemes.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Security) }).Hash }
+    method security-schemes() { %!security-schemes.map({ .key => self!resolve(.value, expect => OpenAPI::Model::SecurityScheme) }).Hash }
     method raw-security-schemes() { %!security-schemes }
     #| Returns a hash that holds reusable Link Objects.
     method links() { %!links.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Link) }).Hash }
@@ -163,7 +163,7 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
     method get-raw-request-body(Str $id) { %!request-bodies{$id} }
     method get-header(Str $id) { self!resolve(%!headers{$id}, expect => OpenAPI::Model::Header) }
     method get-raw-header(Str $id) { %!headers{$id} }
-    method get-security-scheme(Str $id) { self!resolve(%!security-schemes{$id}, expect => OpenAPI::Model::Security) }
+    method get-security-scheme(Str $id) { self!resolve(%!security-schemes{$id}, expect => OpenAPI::Model::SecurityScheme) }
     method get-raw-security-scheme(Str $id) { %!security-schemes{$id} }
     method get-link(Str $id) { self!resolve(%!links{$id}, expect => OpenAPI::Model::Link) }
     method get-raw-link(Str $id) { %!links{$id} }
@@ -957,7 +957,7 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
 #| The OpenAPI::Model::Header class represents an L<OpenAPI Header object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#headerObject>.
 class OpenAPI::Model::Header is OpenAPI::Model::Parameter {}
 
-#| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI Path object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathObject>.
+#| The OpenAPI::Model::Path class represents an L<OpenAPI Path object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathItemObject>.
 class OpenAPI::Model::Path does OpenAPI::Model::Element[
     scalar => {
         '$ref' => {
