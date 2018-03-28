@@ -21,6 +21,10 @@ role OpenAPI::Model::PatternedObject does Associative {
     method map($block)      { %!container.map($block) }
 
     method serialize() {
-        %!container.map({ .key => .value.serialize }).Hash;
+        %!container.map({ if .value ~~ Array {
+                              .key => .value.map(*.serialize)
+                          } else {
+                              .key => .value.serialize
+                          }}).Hash;
     }
 }
