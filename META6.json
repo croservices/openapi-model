@@ -4,6 +4,7 @@
     ],
     "build-depends" : [ ],
     "depends" : [
+        "JSON::Pointer",
         "JSON::Fast",
         "YAMLish"
     ],
