@@ -292,7 +292,8 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     #| Represents a hash that holds additional information to be provided as headers.
     has RefHeader %.headers;
     #| Represents style of how the parameter is serialized.
-    has Str $.style is rw;
+    subset Style of Str where 'simple'|'label'|'matrix'|'form'|'pipeDelimited'|'spaceDelimited';
+    has Style $.style is rw;
     #| Represents `explode` flag for serialization logic.
     has Bool $.explode is rw;
     #| Represents `allowReserved` flag for serialization logic.
