@@ -306,9 +306,9 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
     method headers() { %!headers.map({ .key => self!resolve(.value, expect => OpenAPI::Model::Header) }).Hash }
     method raw-headers() { %!headers }
     #| Returns style of how the parameter is serialized.
-    method style() { $!style // Nil }
+    method style() { $!style // 'form' }
     #| Returns `explode` flag for serialization logic.
-    method explode() { $!explode // Nil }
+    method explode() { $!explode // self.style eq 'form' }
     #| Returns `allowReserved` flag for serialization logic.
     method allow-reserved() { $!allow-reserved // Nil }
 
@@ -832,8 +832,7 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
     multi method remove-server(OpenAPI::Model::Server $server --> Nil) { @!servers .= grep({ not $_ eqv $server}) }
 }
 
-#| The OpenAPI::Model::Parameter class represents an L<OpenAPI Parameter object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject>.
-class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
+class OpenAPI::Model::BaseParameter does OpenAPI::Model::Element[
     scalar => {
         name => {},
         in => {},
@@ -908,9 +907,18 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     #| Returns flag to define ability to pass empty-valued parameters.
     method allow-empty-value() { $!allow-empty-value // Nil }
     #| Returns style of how the parameter is serialized.
-    method style() { $!style // Nil }
+    method style() { return $!style if $!style;
+                     my $in = self.in;
+                     given $in {
+                         when 'query'  { 'form'   }
+                         when 'path'   { 'simple' }
+                         when 'header' { 'simple' }
+                         when 'cookie' { 'form'   }
+                         default { Nil }
+                     }
+                   }
     #| Returns `explode` flag for serialization logic.
-    method explode() { $!explode // Nil }
+    method explode() { $!explode // self.in eq 'form' }
     #| Returns `allowReserved` flag for serialization logic.
     method allow-reserved() { $!allow-reserved // Nil }
     #| Returns schema that defines the type used for the parameter.
@@ -955,8 +963,24 @@ class OpenAPI::Model::Parameter does OpenAPI::Model::Element[
     method delete-content(Str $id) { %!content{$id}:delete }
 }
 
+#| The OpenAPI::Model::Parameter class represents an L<OpenAPI Parameter object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#parameterObject>.
+class OpenAPI::Model::Parameter is OpenAPI::Model::BaseParameter {
+    #| Represents name of the parameter.
+    has Str $.name is rw is required;
+    #| Represents location of the parameter.
+    subset In of Str where 'query'|'header'|'path'|'cookie';
+    has In $.in is rw is required;
+}
+
 #| The OpenAPI::Model::Header class represents an L<OpenAPI Header object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#headerObject>.
-class OpenAPI::Model::Header is OpenAPI::Model::Parameter {}
+class OpenAPI::Model::Header is OpenAPI::Model::BaseParameter {
+    submethod TWEAK(*%args) {
+        if %args<name>.defined || %args<in>.defined {
+            die X::OpenAPI::Model::InvalidFormat.new;
+        }
+    }
+    method in() { 'header' }
+}
 
 #| The OpenAPI::Model::Path class represents an L<OpenAPI Path object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathItemObject>.
 class OpenAPI::Model::Path does OpenAPI::Model::Element[
