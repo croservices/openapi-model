@@ -907,16 +907,16 @@ class OpenAPI::Model::BaseParameter does OpenAPI::Model::Element[
     #| Returns flag to define ability to pass empty-valued parameters.
     method allow-empty-value() { $!allow-empty-value // Nil }
     #| Returns style of how the parameter is serialized.
-    method style() { return $!style if $!style;
-                     my $in = self.in;
-                     given $in {
-                         when 'query'  { 'form'   }
-                         when 'path'   { 'simple' }
-                         when 'header' { 'simple' }
-                         when 'cookie' { 'form'   }
-                         default { Nil }
-                     }
-                   }
+    method style() {
+        return $!style if $!style;
+        given self.in {
+            when 'query'  { 'form'   }
+            when 'path'   { 'simple' }
+            when 'header' { 'simple' }
+            when 'cookie' { 'form'   }
+            default       { Nil      }
+        }
+    }
     #| Returns `explode` flag for serialization logic.
     method explode() { $!explode // self.in eq 'form' }
     #| Returns `allowReserved` flag for serialization logic.
