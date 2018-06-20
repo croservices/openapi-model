@@ -46,6 +46,12 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
         ).Hash;
     }
 
+    method !dispatch-ref($_) {
+        $_ ~~ OpenAPI::Model::Reference ??
+        self!resolve-reference($_) !!
+        .reference-check;
+    }
+
     method reference-check() {
         for %object.kv -> $k, $v {
             my $value = %attr-lookup{%object{$k}<attr> // $k}.get_value(self);
@@ -57,13 +63,13 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                     self!resolve-schema(.container);
                 }
                 when OpenAPI::Model::PatternedObject {
-                    .container.values.map({.reference-check});
+                    .container.values.map({self!dispatch-ref($_)});
                 }
                 when Positional {
-                    .map({ .reference-check });
+                    .map({self!dispatch-ref($_)});
                 }
                 when Associative {
-                    .values.map({.reference-check});
+                    .values.map({self!dispatch-ref($_)});
                 }
                 when OpenAPI::Model::Element {
                     .reference-check;
@@ -157,7 +163,7 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
                 return $patterned.deserialize($v, $model);
             } elsif $patterned ~~ Array {
                 with $v<$ref> {
-                    return $patterned[1].new($v);
+                    return $patterned[1].new(link => $v<$ref>);
                 } else {
                     return $patterned[0].deserialize($v, $model);
                 }
