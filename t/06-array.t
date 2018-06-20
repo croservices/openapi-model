@@ -60,10 +60,8 @@ END
 
 my $api;
 
-lives-ok { $api = OpenAPI::Model.from-json($json) }, 'Can parse the document';
+lives-ok { $api = OpenAPI::Model.from-json($json) }, 'Can parse document';
 
-say $api;
-
-say $api.serialize;
+lives-ok { $api.serialize }, 'Can serialize document';
 
 done-testing;
