@@ -17,6 +17,18 @@ my $json = q:to/END/;
                   "name": "X-APIKey",
                   "in": "header"
                 }
+            },
+            "responses": {
+                "UnAuthorized": {
+                    "description": "Signature is missing",
+                    "headers": {
+                        "X-HMAC": {
+                            "schema": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
             }
         },
         "paths": {
@@ -34,7 +46,12 @@ my $json = q:to/END/;
                         {
                             "api_key": []
                         }
-                    ]
+                    ],
+                    "responses": {
+                        "401": {
+                            "$ref": "#/components/responses/UnAuthorized"
+                        }
+                    }
                 }
             }
         }
@@ -44,6 +61,8 @@ END
 my $api;
 
 lives-ok { $api = OpenAPI::Model.from-json($json) }, 'Can parse the document';
+
+say $api;
 
 say $api.serialize;
 
