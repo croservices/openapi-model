@@ -918,7 +918,7 @@ class OpenAPI::Model::BaseParameter does OpenAPI::Model::Element[
         }
     }
     #| Returns `explode` flag for serialization logic.
-    method explode() { $!explode // self.in eq 'form' }
+    method explode() { $!explode // self.style eq 'form' }
     #| Returns `allowReserved` flag for serialization logic.
     method allow-reserved() { $!allow-reserved // Nil }
     #| Returns schema that defines the type used for the parameter.
