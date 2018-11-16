@@ -23,7 +23,17 @@ class X::OpenAPI::Model::BadReference is Exception {
     }
 }
 
-role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
+class X::OpenAPI::Model::IncorrectSyntax is Exception {
+    has $.expected;
+    has $.type;
+    has $.origin;
+
+    method message() {
+        "Expected $!expected, but got $!type for $!origin"
+    }
+}
+
+role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw, :$name] {
     has $.model;
     has %.extensions;
     my %attr-lookup = ::?CLASS.^attributes(:local).map({ .name.substr(2) => $_ });
@@ -134,11 +144,17 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw] {
     method !handle-refy($spec, $v, $model) {
         return $spec<type>.new(|$v) with $spec<raw>;
         if $spec<array> {
+            die X::OpenAPI::Model::IncorrectSyntax.new(
+                expected => 'Array', type => $v.^name, origin => $name
+            ) unless $v ~~ Array;
             return $v.map({
                     $_<$ref> ?? OpenAPI::Model::Reference.new(link => $_<$ref>)
                              !! $spec<type>.deserialize($_, $model)
                 }).Array;
         } elsif $spec<hash> {
+            die X::OpenAPI::Model::IncorrectSyntax.new(
+                expected => 'Hash', type => $v.^name, origin => $name
+            ) unless $v ~~ Hash;
             return $v.map({
                     .key => .value<$ref> ?? OpenAPI::Model::Reference.new(link => .value<$ref>)
                                          !! $spec<type>.deserialize(.value, $model)

@@ -51,6 +51,7 @@ class X::OpenAPI::Model::InvalidFormat is Exception {
 
 #| The OpenAPI::Model::Components class represents an L<OpenAPI Components object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#componentsObject>.
 class OpenAPI::Model::Components does OpenAPI::Model::Element[
+    name => 'Components',
     scalar => {},
     object => {
         schemas => {
@@ -211,6 +212,7 @@ class OpenAPI::Model::Components does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Callback class represents an L<OpenAPI Callback object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#callbackObject>.
 class OpenAPI::Model::Callback does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
+    name => 'Callback',
     scalar => {},
     object => {},
     :patterned(OpenAPI::Model::Path)] {
@@ -226,6 +228,7 @@ class OpenAPI::Model::Callback does OpenAPI::Model::PatternedObject does OpenAPI
 
 #| The OpenAPI::Model::Contact class represents an L<OpenAPI Contact object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#contactObject>.
 class OpenAPI::Model::Contact does OpenAPI::Model::Element[
+    name => 'Contact',
     scalar => {
         name => {},
         url => {},
@@ -249,6 +252,7 @@ class OpenAPI::Model::Contact does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Discriminator class represents an L<OpenAPI Discriminator object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#discriminatorObject>.
 class OpenAPI::Model::Discriminator does OpenAPI::Model::Element[
+    name => 'Discriminator',
     scalar => {
         propertyName => {
             attr => 'property-name'
@@ -270,6 +274,7 @@ class OpenAPI::Model::Discriminator does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Encoding class represents an L<OpenAPI Encoding object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#encodingObject>.
 class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
+    name => 'Encoding',
     scalar => {
         contentType => {
             attr => 'content-type'
@@ -325,6 +330,7 @@ class OpenAPI::Model::Encoding does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Example class represents an L<OpenAPI Example Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#exampleObject>.
 class OpenAPI::Model::Example does OpenAPI::Model::Element[
+    name => 'Example',
     scalar => {
         summary => {},
         description => {},
@@ -356,6 +362,7 @@ class OpenAPI::Model::Example does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::ExternalDocs class represents an L<OpenAPI External Documentation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#externalDocumentationObject>.
 class OpenAPI::Model::ExternalDocs does OpenAPI::Model::Element[
+    name => 'ExternalDocs',
     scalar => {
         description => {},
         url => {}
@@ -375,6 +382,7 @@ class OpenAPI::Model::ExternalDocs does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Info class represents an L<OpenAPI Info object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#infoObject>.
 class OpenAPI::Model::Info does OpenAPI::Model::Element[
+    name => 'Info',
     scalar => {
         title => {},
         description => {},
@@ -436,6 +444,7 @@ class OpenAPI::Model::Info does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::License class represents an L<OpenAPI License object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#licenseObject>.
 class OpenAPI::Model::License does OpenAPI::Model::Element[
+    name => 'License',
     scalar => {
         name => {},
         url => {},
@@ -454,6 +463,7 @@ class OpenAPI::Model::License does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Link class represents an L<OpenAPI Link object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#linkObject>.
 class OpenAPI::Model::Link does OpenAPI::Model::Element[
+    name => 'Link',
     scalar => {
         operationRef => {
             attr => 'operation-ref'
@@ -510,6 +520,7 @@ class OpenAPI::Model::Link does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::MediaType class represents an L<OpenAPI Media Type object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#mediaTypeObject>.
 class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
+    name => 'MediaType',
     scalar => {
         example => {}
     },
@@ -583,6 +594,7 @@ class OpenAPI::Model::MediaType does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::OAuthFlow class represents an L<OpenAPI OAuthFlow object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oauthFlowObject>.
 class OpenAPI::Model::OAuthFlow does OpenAPI::Model::Element[
+    name => 'OAuthFlow',
     scalar => {
         authorizationUrl => {
             attr => 'authorization-url'
@@ -618,6 +630,7 @@ class OpenAPI::Model::OAuthFlow does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::OAuthFlows class represents an L<OpenAPI OAuthFlows object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oauthFlowsObject>.
 class OpenAPI::Model::OAuthFlows does OpenAPI::Model::Element[
+    name => 'OAuthFlows',
     scalar => {},
     object => {
         implicit => {
@@ -686,6 +699,7 @@ class OpenAPI::Model::OAuthFlows does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Operation class represents an L<OpenAPI Operation object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#operationObject>.
 class OpenAPI::Model::Operation does OpenAPI::Model::Element[
+    name => 'Operation',
     scalar => {
         tags => {},
         summary => {},
@@ -833,6 +847,7 @@ class OpenAPI::Model::Operation does OpenAPI::Model::Element[
 }
 
 class OpenAPI::Model::BaseParameter does OpenAPI::Model::Element[
+    name => 'BaseParameter',
     scalar => {
         name => {},
         in => {},
@@ -984,6 +999,7 @@ class OpenAPI::Model::Header is OpenAPI::Model::BaseParameter {
 
 #| The OpenAPI::Model::Path class represents an L<OpenAPI Path object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathItemObject>.
 class OpenAPI::Model::Path does OpenAPI::Model::Element[
+    name => 'Path',
     scalar => {
         '$ref' => {
             attr => 'ref'
@@ -1146,6 +1162,7 @@ class OpenAPI::Model::Path does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Paths class represents an L<OpenAPI Paths object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#pathsObject>.
 class OpenAPI::Model::Paths does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
+    name => 'Paths',
     scalar => {},
     object => {},
     :patterned(OpenAPI::Model::Path)] {
@@ -1161,6 +1178,7 @@ class OpenAPI::Model::Paths does OpenAPI::Model::PatternedObject does OpenAPI::M
 
 #| The OpenAPI::Model::RequestBody class represents an L<OpenAPI Request Body object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#requestBodyObject>.
 class OpenAPI::Model::RequestBody does OpenAPI::Model::Element[
+    name => 'RequestBody',
     scalar => {
         description => {},
         required => {}
@@ -1195,6 +1213,7 @@ class OpenAPI::Model::RequestBody does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Response class represents an L<OpenAPI Response object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responseObject>.
 class OpenAPI::Model::Response does OpenAPI::Model::Element[
+    name => 'Response',
     scalar => {
         description => {}
     },
@@ -1260,6 +1279,7 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Responses class represents an L<OpenAPI Responses object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#responsesObject>.
 class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
+    name => 'Responses',
     scalar => {},
     object => {},
     :patterned([OpenAPI::Model::Response, OpenAPI::Model::Reference])] {
@@ -1276,6 +1296,7 @@ class OpenAPI::Model::Responses does OpenAPI::Model::PatternedObject does OpenAP
 
 #| The OpenAPI::Model::Schema class represents an L<OpenAPI Schema object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#schemaObject>.
 class OpenAPI::Model::Schema does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
+    name => 'Schema',
     scalar => {},
     object => {}] {
 
@@ -1284,6 +1305,7 @@ class OpenAPI::Model::Schema does OpenAPI::Model::PatternedObject does OpenAPI::
 
 #| The OpenAPI::Model::Security class represents an L<OpenAPI Security Requirement object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securityRequirementObject>.
 class OpenAPI::Model::Security does OpenAPI::Model::PatternedObject does OpenAPI::Model::Element[
+    name => 'Security',
     scalar => {},
     object => {},
     :patterned] {
@@ -1299,6 +1321,7 @@ class OpenAPI::Model::Security does OpenAPI::Model::PatternedObject does OpenAPI
 
 #| The OpenAPI::Model::SecurityScheme class represents an L<OpenAPI Security Scheme object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#securitySchemeObject>.
 class OpenAPI::Model::SecurityScheme does OpenAPI::Model::Element[
+    name => 'SecurityScheme',
     scalar => {
         type => {},
         description => {},
@@ -1390,6 +1413,7 @@ class OpenAPI::Model::SecurityScheme does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Server class represents an L<OpenAPI Server object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverObject>.
 class OpenAPI::Model::Server does OpenAPI::Model::Element[
+    name => 'Server',
     scalar => {
         url => {},
         description => {}
@@ -1428,6 +1452,7 @@ class OpenAPI::Model::Server does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Tag class represents an L<OpenAPI Tag object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#tagObject>.
 class OpenAPI::Model::Tag does OpenAPI::Model::Element[
+    name => 'Tag',
     scalar => {
         name => {},
         description => {}
@@ -1464,6 +1489,7 @@ class OpenAPI::Model::Tag does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::Variable class represents an L<OpenAPI Server Variable object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#serverVariableObject>.
 class OpenAPI::Model::Variable does OpenAPI::Model::Element[
+    name => 'Variable',
     scalar => {
         enum => {},
         default => {},
@@ -1487,6 +1513,7 @@ class OpenAPI::Model::Variable does OpenAPI::Model::Element[
 
 #| The OpenAPI::Model::OpenAPI class represents an L<OpenAPI document object|https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#oasObject>.
 class OpenAPI::Model::OpenAPI does OpenAPI::Model::Element[
+    name => 'OpenAPI',
     scalar => {
         openapi => {}
     },
