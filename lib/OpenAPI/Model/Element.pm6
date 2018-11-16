@@ -69,7 +69,7 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw, :$na
                 when OpenAPI::Model::Reference {
                     self!resolve-reference($_);
                 }
-                when .^name.ends-with('Schema') {
+                when .^name eq ('OpenAPI::Model::Schema') {
                     self!resolve-schema(.container);
                 }
                 when OpenAPI::Model::PatternedObject {
