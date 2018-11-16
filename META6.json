@@ -23,5 +23,5 @@
     "source-url" : "https://github.com/croservices/openapi-model.git",
     "tags" : [ "openapi", "oas", "swagger", "parsing", "generation" ],
     "test-depends" : [ ],
-    "version" : "1.0.2"
+    "version" : "1.0.3"
 }
