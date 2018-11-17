@@ -1,4 +1,4 @@
-NAME
+OpenAPI::Model [![Build Status](https://travis-ci.org/croservices/openapi-model.svg?branch=master)](https://travis-ci.org/croservices/openapi-model)
 ====
 
 OpenAPI::Model - work with OpenAPI documents in terms of a set of Perl 6 objects.
