@@ -41,19 +41,25 @@ role OpenAPI::Model::Element [:%scalar, :%object, :$patterned = Nil, :$raw, :$na
     method set-model($!model) {}
 
     method !resolve-schema($item) {
-        return $item if $item !~~ Associative;
-        $item.map(
-            {
-                if .key eqv '$ref' {
-                    my $middle = self!resolve-reference(OpenAPI::Model::Reference.new(link => .value));
-                    self!resolve-schema($middle);
-                } elsif .value ~~ Associative|Positional {
-                    .key => self!resolve-schema(.value);
-                } else {
-                    .key => .value;
+        if $item ~~ Associative {
+            $item.map(
+                {
+                    if .key eqv '$ref' {
+                        my $middle = self!resolve-reference(OpenAPI::Model::Reference.new(link => .value));
+                        self!resolve-schema($middle);
+                    } else {
+                        # Look into allOf, oneOf and anyOf
+                        .key => self!resolve-schema(.value);
+                    }
                 }
-            }
-        ).Hash;
+            ).Hash;
+        }
+        elsif $item ~~ Positional {
+            $item.map( { self!resolve-schema($_) } ).Array;
+        }
+        else {
+            return $item;
+        }
     }
 
     method !dispatch-ref($_) {
