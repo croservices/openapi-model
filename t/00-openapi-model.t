@@ -109,7 +109,7 @@ $api.paths.delete-path('/pets');
 ok $api.paths.kv.elems == 0, 'Path was removed';
 $api.paths.set-path('/pets', $path);
 ok $api.paths.kv.elems == 2, 'Path was set for Paths object';
-ok $api.paths.pairs ~~ Seq, 'paris methods returns Seq';
+ok $api.paths.pairs ~~ Seq, 'pairs methods returns Seq';
 ok $api.paths.pairs.elems == 1, 'Paths Object has correct number of elements from pairs';
 my $pair = $api.paths.pairs.first;
 ok $pair ~~ Pair, 'Got correct pair from pairs';
