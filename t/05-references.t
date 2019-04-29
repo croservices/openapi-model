@@ -94,7 +94,7 @@ is $api.serialize, from-json($json-doc), 'Serialization works';
 my $link1 = $api.paths</2.0/repositories/{username}>.get.responses<200>.links<userRepository>;
 my $link2 = $api.paths</2.0/repositories/{username}>.get.responses<200>.get-link('userRepository');
 
-my $ref = $api.paths</2.0/repositories/{username}>.get.responses<200>.raw-get-link('userRepository');
+my $ref = $api.paths</2.0/repositories/{username}>.get.responses<200>.get-raw-link('userRepository');
 
 ok $link1 !~~ OpenAPI::Model::Reference, 'AT-KEY gives resolved link';
 ok $link2 !~~ OpenAPI::Model::Reference, 'get-link gives resolved link';

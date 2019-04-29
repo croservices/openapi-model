@@ -1258,7 +1258,8 @@ class OpenAPI::Model::Response does OpenAPI::Model::Element[
     method get-header(Str $id) { self!resolve(%!headers{$id}, expect => OpenAPI::Model::Header) }
     method get-raw-header(Str $id) { %!headers{$id} }
     method get-link(Str $id) { self!resolve(%!links{$id}, expect => OpenAPI::Model::Link) }
-    method raw-get-link(Str $id) { %!links{$id} }
+    method raw-get-link(Str $id) is DEPRECATED('get-raw-link') { %!links{$id} } # TODO will be removed in 1.2
+    method get-raw-link(Str $id) { %!links{$id} }
 
     # Setters
     #| Adds header into response by id.
